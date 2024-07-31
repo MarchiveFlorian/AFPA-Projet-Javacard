@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import fr.afpa.App;
 import fr.afpa.Models.Contact;
-import fr.afpa.Models.Contact.Gender;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -62,17 +61,18 @@ public class UserManagerController {
     @FXML
     private ComboBox<String> comboBoxGender;
 
-    comboBoxGender.getItems("Male").add;   //?????????????????? 
-    comboBoxGender.getItems("Female").add;
-    comboBoxGender.getItems("Non-binary").add;
+    @FXML
+    private void initComboBoxGender() {
+        comboBoxGender.getItems().addAll("Male", "Female", "Non-binary");
+    }
 
     @FXML
     private ComboBox<String> comboBoxSelectFormat;
 
-    comboBoxSelectFormat.getItems("vCard").add; //??????????????
-    comboBoxSelectFormat.getItems("JSON").add;
-    comboBoxSelectFormat.getItems("CSV").add;
-    comboBoxSelectFormat.getItems("QRCode").add;
+    @FXML
+    private void initComboBoxSelectFormat() {
+        comboBoxSelectFormat.getItems().addAll("vCard","JSON","CSV","QRCode");
+    }
 
     @FXML
     private DatePicker datePickerBirthday;
