@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox fx:id="hBoxGeneral" alignment="CENTER" spacing="60.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<HBox fx:id="hBoxGeneral" alignment="CENTER" spacing="60.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.afpa.Controllers.UserManagerController">
    <children>
       <VBox fx:id="vBoxBigLeft" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" spacing="5.0">
          <children>
