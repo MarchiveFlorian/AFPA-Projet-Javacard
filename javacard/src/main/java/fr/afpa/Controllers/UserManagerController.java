@@ -2,6 +2,7 @@ package fr.afpa.Controllers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import fr.afpa.App;
 import fr.afpa.Models.Contact;
@@ -24,7 +25,7 @@ public class UserManagerController {
 
     @FXML
     private Button newButton;
-    
+
     @FXML
     private Button exportButton;
 
@@ -71,7 +72,7 @@ public class UserManagerController {
 
     @FXML
     private void initComboBoxSelectFormat() {
-        comboBoxSelectFormat.getItems().addAll("vCard","JSON","CSV","QRCode");
+        comboBoxSelectFormat.getItems().addAll("vCard", "JSON", "CSV", "QRCode");
     }
 
     @FXML
@@ -81,7 +82,7 @@ public class UserManagerController {
     private CheckBox checkBoxSelectAll;
 
     @FXML
-    private TableView tableView4columns;
+    private TableView<String> tableView4columns;
 
     @FXML
     private TableColumn<Contact, String> columnFirstName;
@@ -101,21 +102,50 @@ public class UserManagerController {
     @FXML
     public void initialize() {
 
-        contacts.add(new Contact("Boivin", "Chloé", "Female", "19/07/1995", "bulo", "Bordeaux", "0604138029", "07",
-                "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"));
-        contacts.add(new Contact("Marchive", "Florian", "Male", "28/03/1995", "marchive", "Bordeaux", "0613206966",
-                "07", "https://www.linkedin.com/in/florianmarchive/", "https://github.com/MarchiveFlorian"));
+        tableView4columns.setItems(contacts); // TO DO initialize
 
-        // *** + INITIALIZE WITH CONTACTS ALREADY IN BINARY **********
+        contacts.addAll(
+                new Contact("Boivin", "Chloé", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+                        "", "chloe.boivin@outlook.com",
+                        "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+                new Contact("Marchive", "Florian", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+                        "0613206966",
+                        "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
+                        "https://github.com/MarchiveFlorian"));
 
-        // ADD NEW LINE
-        tableView4columns.setItems(contacts);
+        // ***
+        // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
+        // ***
 
-        columnFirstName.setCellValueFactory(cellData -> cellData.getValue().getFirstName());
+        columnFirstName.setCellValueFactory(cellData -> cellData.getValue.getFirstName());
         columnLastName.setCellValueFactory(cellData -> cellData.getValue().getLastName());
         columnNumber.setCellValueFactory(cellData -> cellData.getValue().getPersonalPhoneNumber());
         columnMail.setCellValueFactory(cellData -> cellData.getValue().getEmailAddress());
 
+    }
+
+    /**
+     * RESET THE FORM + INIT VERSION
+     */
+    @FXML
+    private void resetForm() {
+        // Reset TextFields
+        textFieldFirstName.setText("");
+        textFieldLastName.setText("");
+        textFieldPseudo.setText("");
+        textFieldAddress.setText("");
+        textFieldNumber.setText("");
+        textFieldProNumber.setText("");
+        textFieldMail.setText("");
+        textFieldLinkedin.setText("");
+        textFieldGitHub.setText("");
+
+        // Reset Gender ComboBox
+        comboBoxGender.getSelectionModel().clearSelection();
+        // comboBoxGender.getSelectionModel().selectFirst(); // select an element
+
+        // Reset DatePicker
+        datePickerBirthday.setValue(null);
     }
 
     // SAVE BUTTON
@@ -124,8 +154,8 @@ public class UserManagerController {
 
         String fName = textFieldFirstName.getText();
         String lName = textFieldLastName.getText();
-        String gender = comboBoxGender.getValue(); // ---------------
-        LocalDate bDay = datePickerBirthday.getValue(); // --------------------
+        String gender = comboBoxGender.getValue();
+        LocalDate bDay = datePickerBirthday.getValue();
         String pseudo = textFieldPseudo.getText();
         String add = textFieldAddress.getText();
         String tNum = textFieldNumber.getText();
@@ -135,83 +165,49 @@ public class UserManagerController {
         String gHub = textFieldGitHub.getText();
 
         if (!fName.isEmpty() && !lName.isEmpty() && !gender.isEmpty() && bDay != null && !tNum.isEmpty()
-                && !mail.isEmpty() && !linkd.isEmpty()) { // ARE NOT EMPTY
-            contacts.add(new Contact(fName, lName, gender, bDay, pseudo, add, tNum, tPNum, mail, linkd,gHub));
+                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty.
+            contacts.add(new Contact(fName, lName, gender, bDay, pseudo, add, tNum, tPNum, mail, linkd, gHub));
 
-            // textFieldFirstName.clear();
-            // textFieldLastName.clear();
-            // comboBoxGender.clear(); // ------------ => REMETTRE ETAT INITIAL
-            // datePickerBirthday.clear(); // --------------
-            // textFieldPseudo.clear();
-            // textFieldAddress.clear();
-            // textFieldNumber.clear();
-            // textFieldProNumber.clear();
-            // textFieldMail.clear();
-            // textFieldLinkedin.clear();
-            // textFieldGitHub.clear();
-
+            resetForm();
         }
     }
 
     // NEW BUTTON
-
     @FXML
-    private void newC (ActionEvent e)
-    {
+    private void newC(ActionEvent e) {
 
-        // textFieldFirstName.clear();
-        // textFieldLastName.clear();
-        // comboBoxGender.clear();
-        // datePickerBirthday.gclear(); => REMETTRE ETAT INITIAL
-        // textFieldPseudo.getclear();
-        // textFieldAddress.getclear();
-        // textFieldNumber.getclear();
-        // textFieldProNumber.getclear();
-        // textFieldMail.getclear();
-        // textFieldLinkedin.getclear();
-        // textFieldGitHub.getclear();
+        resetForm();
 
-        contacts.add(new Contact("", "", "", "")); // NEW LINE IN TAB
+        contacts.add(new Contact("", "", "", LocalDate.of(0000, 0, 0), "", "", "", "", "", "", ""));
+        // TO DO: New line in tab
 
     }
 
     // DELETE BUTTON
-
     @FXML
     void delete(ActionEvent e) {
-        textFieldFirstName.clear();
-        textFieldLastName.clear();
-        comboBoxGender.clear();
-        datePickerBirthday.clear(); 
-        textFieldPseudo.clear();
-        textFieldAddress.clear();
-        textFieldNumber.clear();
-        textFieldProNumber.clear();
-        textFieldMail.clear();
-        textFieldLinkedin.clear();
-        textFieldGitHub.clear();
 
-        // + FORMULAIRE ETAT INITIAL
-
-        contacts.remove(contact<Contact>); // REMOVE THE LINE IN TAB
+        resetForm();
+        Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();  //TO DO WORKING
+        if (selectedContact != null) {
+            contacts.remove(selectedContact)};
+        
     }
 
     // SELECT ALL ARRAY
-
     @FXML
     void selectAllArray(ActionEvent e) {
-        // ****************************
+        tableView4columns.getSelectionModel().selectAll();
     }
 
     // EXPORT BUTTON
-
-    @FXML void export (ActionEvent e){
-        if (comboBoxSelectFormat.isEmpty()){
+    @FXML
+    void export(ActionEvent e) {
+        if (comboBoxSelectFormat.getValue() == null) {
             System.out.println("Please select a Format");
         } else {
-            // EXPORT ACTIONS ****************
+            // TO DO *** EXPORT ACTIONS ***
         }
     }
-
 
 }
