@@ -82,7 +82,7 @@ public class UserManagerController {
     private CheckBox checkBoxSelectAll;
 
     @FXML
-    private TableView<String> tableView4columns;
+    private TableView<Contact> tableView4columns;
 
     @FXML
     private TableColumn<Contact, String> columnFirstName;
@@ -105,10 +105,10 @@ public class UserManagerController {
         tableView4columns.setItems(contacts); // TO DO initialize
 
         contacts.addAll(
-                new Contact("Boivin", "Chloé", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+                new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
                         "", "chloe.boivin@outlook.com",
                         "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                new Contact("Marchive", "Florian", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+                new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
                         "0613206966",
                         "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
                         "https://github.com/MarchiveFlorian"));
@@ -117,10 +117,10 @@ public class UserManagerController {
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
         // ***
 
-        columnFirstName.setCellValueFactory(cellData -> cellData.getValue.getFirstName());
-        columnLastName.setCellValueFactory(cellData -> cellData.getValue().getLastName());
-        columnNumber.setCellValueFactory(cellData -> cellData.getValue().getPersonalPhoneNumber());
-        columnMail.setCellValueFactory(cellData -> cellData.getValue().getEmailAddress());
+        columnFirstName.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
+        columnLastName.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
+        columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
+        columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
 
     }
 
@@ -188,9 +188,10 @@ public class UserManagerController {
     void delete(ActionEvent e) {
 
         resetForm();
-        Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();  //TO DO WORKING
+        Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();  
         if (selectedContact != null) {
-            contacts.remove(selectedContact)};
+            contacts.remove(selectedContact);
+        }
         
     }
 
