@@ -1,9 +1,9 @@
-package fr.afpa.SerializersManager;
-
-import fr.afpa.Models.Contact;
+package fr.afpa.serializersManager;
 
 import java.io.*;
 import java.util.ArrayList;
+
+import fr.afpa.models.Contact;
 
 /**
  * A class that serializes and deserializes Contact objects to/from binary format.

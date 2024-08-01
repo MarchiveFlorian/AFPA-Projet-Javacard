@@ -1,4 +1,4 @@
-package fr.afpa.SerializersManager;
+package fr.afpa.serializersManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
