@@ -21,6 +21,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 
 public class UserManagerController {
 
@@ -104,8 +105,12 @@ public class UserManagerController {
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     @FXML
+    private HBox hBoxForm;
+
+    @FXML
     public void initialize() {
 
+        hBoxForm.setVisible(false);
         selectManual();
         initComboBoxGender();
         initComboBoxSelectFormat();
@@ -114,6 +119,7 @@ public class UserManagerController {
 
         // ChangeListener listening to selection 
         tableView4columns.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            hBoxForm.setVisible(true);
             updateForm(newValue);
         });
 
@@ -217,6 +223,7 @@ public class UserManagerController {
             selectedContact.setGithubGitlabLink(gHub);
 
             resetForm();
+            hBoxForm.setVisible(false);
         } else {
             // Error message
             System.out.println("Please select a contact to update.");
@@ -229,6 +236,7 @@ public class UserManagerController {
     private void newC(ActionEvent e) {
 
         resetForm();
+        hBoxForm.setVisible(true);
 
         Contact newContact = new Contact("NEW", "-", null, null, null, null, "-", null, "-", null, null);
 
@@ -260,6 +268,7 @@ public class UserManagerController {
 
         resetForm();
         checkBoxSelectAll.setSelected(false);
+        hBoxForm.setVisible(false);
     }
 
     // SELECT MULTIPLE ELEMENTS WITH "CTRL"

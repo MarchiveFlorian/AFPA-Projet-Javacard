@@ -34,14 +34,14 @@ public class Contact implements Serializable {
         this.gender = new SimpleStringProperty(gender);
         this.address = new SimpleStringProperty(address);
         this.personalPhoneNumber = new SimpleStringProperty(personalPhoneNumber);
-        this.emailAddress = new SimpleStringProperty();
+        this.emailAddress = new SimpleStringProperty(emailAddress);
         setEmailAddress(emailAddress);  // Use setter to validate email
 
-        this.birthDate = new SimpleObjectProperty<>();
-        this.pseudo = new SimpleStringProperty();
-        this.professionalPhoneNumber = new SimpleStringProperty();
-        this.linkedinLink = new SimpleStringProperty();
-        this.githubGitlabLink = new SimpleStringProperty();
+        this.birthDate = new SimpleObjectProperty<>(birthDate);
+        this.pseudo = new SimpleStringProperty(pseudo);
+        this.professionalPhoneNumber = new SimpleStringProperty(professionalPhoneNumber);
+        this.linkedinLink = new SimpleStringProperty(linkedinLink);
+        this.githubGitlabLink = new SimpleStringProperty(githubGitlabLink);
     }
 
     // Getters and setters for optional attributes

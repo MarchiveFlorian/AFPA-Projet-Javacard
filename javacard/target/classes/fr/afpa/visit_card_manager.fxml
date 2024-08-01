@@ -88,7 +88,7 @@
             </HBox>
          </children>
       </VBox>
-      <HBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #084d88;">
+      <HBox fx:id="hBoxForm" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #084d88;">
          <children>
             <VBox alignment="CENTER_LEFT" prefHeight="250.0" prefWidth="168.0" spacing="25.0">
                <children>
