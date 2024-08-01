@@ -8,6 +8,7 @@ import java.util.List;
 
 import fr.afpa.App;
 import fr.afpa.Models.Contact;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -111,6 +112,11 @@ public class UserManagerController {
 
         tableView4columns.setItems(contacts); // TO DO initialize
 
+        // ChangeListener listening to selection 
+        tableView4columns.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            updateForm(newValue);
+        });
+
         contacts.addAll(
                 new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
                         "", "chloe.boivin@outlook.com",
@@ -155,10 +161,31 @@ public class UserManagerController {
         datePickerBirthday.setValue(null);
     }
 
+    /**
+     * UPDATE THE FORM
+     */
+    @FXML
+    private void updateForm(Contact contact) {
+        if (contact != null) {
+            textFieldFirstName.setText(contact.getFirstName());
+            textFieldLastName.setText(contact.getLastName());
+            comboBoxGender.setValue(contact.getGender());
+            datePickerBirthday.setValue(contact.getBirthDate());
+            textFieldPseudo.setText(contact.getNickname());
+            textFieldAddress.setText(contact.getAddress());
+            textFieldNumber.setText(contact.getPersonalPhoneNumber());
+            textFieldProNumber.setText(contact.getProfessionalPhoneNumber());
+            textFieldMail.setText(contact.getEmailAddress());
+            textFieldLinkedin.setText(contact.getLinkedinLink());
+            textFieldGitHub.setText(contact.getGithubGitlabLink());
+        }
+    }
+
     // SAVE BUTTON
     @FXML
     private void save(ActionEvent e) {
 
+        // Get values of the formulary
         String fName = textFieldFirstName.getText();
         String lName = textFieldLastName.getText();
         String gender = comboBoxGender.getValue();
@@ -171,11 +198,29 @@ public class UserManagerController {
         String linkd = textFieldLinkedin.getText();
         String gHub = textFieldGitHub.getText();
 
-        if (!fName.isEmpty() && !lName.isEmpty() && bDay != null && !tNum.isEmpty()
-                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty. //&& !gender.isEmpty()
-            contacts.add(new Contact(fName, lName, gender, bDay, pseudo, add, tNum, tPNum, mail, linkd, gHub));
+        // Get selected contact
+        Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();
+
+        if (!fName.isEmpty() && !lName.isEmpty() && !gender.isEmpty() && bDay != null && !tNum.isEmpty()
+                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty
+
+            selectedContact.setFirstName(fName);
+            selectedContact.setLastName(lName);
+            selectedContact.setGender(gender);
+            selectedContact.setBirthDate(bDay);
+            selectedContact.setNickname(pseudo);
+            selectedContact.setAddress(add);
+            selectedContact.setPersonalPhoneNumber(tNum);
+            selectedContact.setProfessionalPhoneNumber(tPNum);
+            selectedContact.setEmailAddress(mail);
+            selectedContact.setLinkedinLink(linkd);
+            selectedContact.setGithubGitlabLink(gHub);
 
             resetForm();
+        } else {
+            // Error message
+            System.out.println("Please select a contact to update.");
+
         }
     }
 
@@ -185,43 +230,52 @@ public class UserManagerController {
 
         resetForm();
 
-        tableView4columns.getItems().add(new Contact("NEW", "-", null, null, null, null, "-", null, "-", null, null));
-        // TO DO SELECT LINE BLUE ********
+        Contact newContact = new Contact("NEW", "-", null, null, null, null, "-", null, "-", null, null);
+
+        // Add new Contact to tableView
+        tableView4columns.getItems().add(newContact);
+
+        // Clear selection -> not to have many selected items
+        tableView4columns.getSelectionModel().clearSelection();
+
+        // Select new Contact
+        tableView4columns.getSelectionModel().select(newContact);
+
+        // Focus on the line -> visibility
+        tableView4columns.getSelectionModel().select(newContact);
+
     }
 
     // DELETE BUTTON
     @FXML
     void delete(ActionEvent e) {
 
-        resetForm();
-        // Contact selectedContact =
-        // tableView4columns.getSelectionModel().getSelectedItem();
-
         ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
 
         if (!selectedContacts.isEmpty()) {
-            // Créer une liste pour stocker les contacts à supprimer
+            // New list to stock contacts to delete
             List<Contact> contactsToRemove = new ArrayList<>(selectedContacts);
-
-            // Supprimer les contacts sélectionnés de la liste principale
             contacts.removeAll(contactsToRemove);
         }
-        // if (selectedContact != null) {
-        // contacts.remove(selectedContact);
-        // }
 
+        resetForm();
+        checkBoxSelectAll.setSelected(false);
     }
 
-    // SELECT Multiple elements with CTRL
+    // SELECT MULTIPLE ELEMENTS WITH "CTRL"
     @FXML
     private void selectManual() {
         tableView4columns.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
-    // SELECT ALL ARRAY *****************
+    // SELECT ALL ARRAY
     @FXML
     void selectAllArray(ActionEvent e) {
-        // tableView4columns.getSelectionModel().selectAll();
+        if (checkBoxSelectAll.isSelected()) {
+            tableView4columns.getSelectionModel().selectAll();
+        } else {
+            tableView4columns.getSelectionModel().clearSelection();
+        }
     }
 
     // EXPORT BUTTON
@@ -229,7 +283,7 @@ public class UserManagerController {
     void export(ActionEvent e) {
 
         String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
-        
+
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
         } else {
