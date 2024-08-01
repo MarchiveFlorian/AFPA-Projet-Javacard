@@ -1,4 +1,5 @@
-package fr.afpa.serializersManager;
+package fr.afpa.serializers;
+
 
 import java.io.*;
 import java.util.ArrayList;
