@@ -3,6 +3,8 @@ package fr.afpa.Controllers;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.afpa.App;
 import fr.afpa.Models.Contact;
@@ -14,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -102,6 +105,10 @@ public class UserManagerController {
     @FXML
     public void initialize() {
 
+        selectManual();
+        initComboBoxGender();
+        initComboBoxSelectFormat();
+
         tableView4columns.setItems(contacts); // TO DO initialize
 
         contacts.addAll(
@@ -164,8 +171,8 @@ public class UserManagerController {
         String linkd = textFieldLinkedin.getText();
         String gHub = textFieldGitHub.getText();
 
-        if (!fName.isEmpty() && !lName.isEmpty() && !gender.isEmpty() && bDay != null && !tNum.isEmpty()
-                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty.
+        if (!fName.isEmpty() && !lName.isEmpty() && bDay != null && !tNum.isEmpty()
+                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty. //&& !gender.isEmpty()
             contacts.add(new Contact(fName, lName, gender, bDay, pseudo, add, tNum, tPNum, mail, linkd, gHub));
 
             resetForm();
@@ -178,9 +185,8 @@ public class UserManagerController {
 
         resetForm();
 
-        contacts.add(new Contact("", "", "", LocalDate.of(0000, 0, 0), "", "", "", "", "", "", ""));
-        // TO DO: New line in tab
-
+        tableView4columns.getItems().add(new Contact("NEW", "-", null, null, null, null, "-", null, "-", null, null));
+        // TO DO SELECT LINE BLUE ********
     }
 
     // DELETE BUTTON
@@ -188,26 +194,63 @@ public class UserManagerController {
     void delete(ActionEvent e) {
 
         resetForm();
-        Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();  
-        if (selectedContact != null) {
-            contacts.remove(selectedContact);
+        // Contact selectedContact =
+        // tableView4columns.getSelectionModel().getSelectedItem();
+
+        ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
+
+        if (!selectedContacts.isEmpty()) {
+            // Créer une liste pour stocker les contacts à supprimer
+            List<Contact> contactsToRemove = new ArrayList<>(selectedContacts);
+
+            // Supprimer les contacts sélectionnés de la liste principale
+            contacts.removeAll(contactsToRemove);
         }
-        
+        // if (selectedContact != null) {
+        // contacts.remove(selectedContact);
+        // }
+
     }
 
-    // SELECT ALL ARRAY
+    // SELECT Multiple elements with CTRL
+    @FXML
+    private void selectManual() {
+        tableView4columns.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+    }
+
+    // SELECT ALL ARRAY *****************
     @FXML
     void selectAllArray(ActionEvent e) {
-        tableView4columns.getSelectionModel().selectAll();
+        // tableView4columns.getSelectionModel().selectAll();
     }
 
     // EXPORT BUTTON
     @FXML
     void export(ActionEvent e) {
-        if (comboBoxSelectFormat.getValue() == null) {
+
+        String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
+        
+        if (selectedFormat == null) {
             System.out.println("Please select a Format");
         } else {
-            // TO DO *** EXPORT ACTIONS ***
+            switch (selectedFormat) {
+                case "vCard":
+                    // TO DO Link with VCard Logic
+                    System.out.println("Exporting as vCard");
+                    break;
+                case "JSON":
+                    // TO DO Link with JSON Logic
+                    System.out.println("Exporting as JSON");
+                    break;
+                case "CSV":
+                    // TO DO Link with CSV Logic
+                    System.out.println("Exporting as CSV");
+                    break;
+                case "QRCode":
+                    // TO DO Link with QRCode Logic
+                    System.out.println("Exporting as QRCode");
+                    break;
+            }
         }
     }
 

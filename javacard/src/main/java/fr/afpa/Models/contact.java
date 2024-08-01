@@ -25,9 +25,9 @@ public class Contact implements Serializable {
 
     // Constructor for required attributes
     public Contact(String firstName, String lastName, String gender, LocalDate birthDate, String pseudo, String address, String personalPhoneNumber, String professionalPhoneNumber,  String emailAddress, String linkedinLink, String githubGitlabLink) {
-        if (lastName == null || firstName == null || gender == null || address == null || personalPhoneNumber == null || emailAddress == null) {
-            throw new IllegalArgumentException("Required fields cannot be null");
-        }
+        // if (lastName == null || firstName == null || gender == null || address == null || personalPhoneNumber == null || emailAddress == null) {
+        //     throw new IllegalArgumentException("Required fields cannot be null");
+        // }
 
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
@@ -86,9 +86,9 @@ public class Contact implements Serializable {
     }
 
     public void setLinkedinLink(String linkedinLink) {
-        if (linkedinLink != null && !Pattern.matches("^(https?:\\/\\/)?(www\\.)?(linkedin)\\.com\\/[a-zA-Z0-9_-]+\\/?$", linkedinLink)) {
-            throw new IllegalArgumentException("Invalid Linkedin link");
-        }
+        // if (linkedinLink != null && !Pattern.matches("^(https?:\\/\\/)?(www\\.)?(linkedin)\\.com\\/[a-zA-Z0-9_-]+\\/?$", linkedinLink)) {
+        //     throw new IllegalArgumentException("Invalid Linkedin link");
+        // }
         this.linkedinLink.set(linkedinLink);
     }
 
@@ -101,9 +101,9 @@ public class Contact implements Serializable {
     }
 
     public void setGithubGitlabLink(String githubGitlabLink) {
-        if (githubGitlabLink != null && !Pattern.matches("^(https?:\\/\\/)?(www\\.)?(github|gitlab)\\.com\\/[a-zA-Z0-9_-]+\\/?$", githubGitlabLink)) {
-            throw new IllegalArgumentException("Invalid Github or Gitlab link");
-        }
+        // if (githubGitlabLink != null && !Pattern.matches("^(https?:\\/\\/)?(www\\.)?(github|gitlab)\\.com\\/[a-zA-Z0-9_-]+\\/?$", githubGitlabLink)) {
+        //     throw new IllegalArgumentException("Invalid Github or Gitlab link");
+        // }
         this.githubGitlabLink.set(githubGitlabLink);
     }
 
@@ -117,9 +117,9 @@ public class Contact implements Serializable {
     }
 
     public void setLastName(String lastName) {
-        if (lastName == null) {
-            throw new IllegalArgumentException("Last name cannot be null");
-        }
+        // if (lastName == null) {
+        //     throw new IllegalArgumentException("Last name cannot be null");
+        // }
         this.lastName.set(lastName);
     }
 
@@ -132,9 +132,9 @@ public class Contact implements Serializable {
     }
 
     public void setFirstName(String firstName) {
-        if (firstName == null) {
-            throw new IllegalArgumentException("First name cannot be null");
-        }
+        // if (firstName == null) {
+        //     throw new IllegalArgumentException("First name cannot be null");
+        // }
         this.firstName.set(firstName);
     }
 
@@ -147,9 +147,9 @@ public class Contact implements Serializable {
     }
 
     public void setGender(String gender) {
-        if (gender == null) {
-            throw new IllegalArgumentException("Gender cannot be null");
-        }
+        // if (gender == null) {
+        //     throw new IllegalArgumentException("Gender cannot be null");
+        // }
         this.gender.set(gender);
     }
 
@@ -162,9 +162,9 @@ public class Contact implements Serializable {
     }
 
     public void setAddress(String address) {
-        if (address == null) {
-            throw new IllegalArgumentException("Address cannot be null");
-        }
+        // if (address == null) {
+        //     throw new IllegalArgumentException("Address cannot be null");
+        // }
         this.address.set(address);
     }
 
@@ -177,9 +177,9 @@ public class Contact implements Serializable {
     }
 
     public void setPersonalPhoneNumber(String personalPhoneNumber) {
-        if (personalPhoneNumber == null) {
-            throw new IllegalArgumentException("Personal phone number cannot be null");
-        }
+        // if (personalPhoneNumber == null) {
+        //     throw new IllegalArgumentException("Personal phone number cannot be null");
+        // }
         this.personalPhoneNumber.set(personalPhoneNumber);
     }
 
@@ -192,9 +192,9 @@ public class Contact implements Serializable {
     }
 
     public void setEmailAddress(String emailAddress) {
-        if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", emailAddress)) {
-            throw new IllegalArgumentException("Invalid email address");
-        }
+        // if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", emailAddress)) {
+        //     throw new IllegalArgumentException("Invalid email address");
+        // }
         this.emailAddress.set(emailAddress);
     }
 
