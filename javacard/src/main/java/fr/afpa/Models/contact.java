@@ -1,6 +1,7 @@
 package fr.afpa.Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,14 +11,10 @@ import javafx.beans.property.SimpleObjectProperty;
 public class Contact implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    public enum Gender {
-        Male, Female, NoGender
-    }
-
-    private final StringProperty lastName;
     private final StringProperty firstName;
-    private final ObjectProperty<Gender> gender;
-    private final StringProperty birthDate;
+    private final StringProperty lastName;
+    private final StringProperty gender;
+    private final ObjectProperty<LocalDate> birthDate;
     private final StringProperty pseudo;
     private final StringProperty address;
     private final StringProperty personalPhoneNumber;
@@ -27,20 +24,20 @@ public class Contact implements Serializable {
     private final StringProperty githubGitlabLink;
 
     // Constructor for required attributes
-    public Contact(String lastName, String firstName, Gender gender, String address, String personalPhoneNumber, String emailAddress) {
+    public Contact(String firstName, String lastName, String gender, LocalDate birthDate, String pseudo, String address, String personalPhoneNumber, String professionalPhoneNumber,  String emailAddress, String linkedinLink, String githubGitlabLink) {
         if (lastName == null || firstName == null || gender == null || address == null || personalPhoneNumber == null || emailAddress == null) {
             throw new IllegalArgumentException("Required fields cannot be null");
         }
 
-        this.lastName = new SimpleStringProperty(lastName);
         this.firstName = new SimpleStringProperty(firstName);
-        this.gender = new SimpleObjectProperty<>(gender);
+        this.lastName = new SimpleStringProperty(lastName);
+        this.gender = new SimpleStringProperty(gender);
         this.address = new SimpleStringProperty(address);
         this.personalPhoneNumber = new SimpleStringProperty(personalPhoneNumber);
         this.emailAddress = new SimpleStringProperty();
         setEmailAddress(emailAddress);  // Use setter to validate email
 
-        this.birthDate = new SimpleStringProperty();
+        this.birthDate = new SimpleObjectProperty<>();
         this.pseudo = new SimpleStringProperty();
         this.professionalPhoneNumber = new SimpleStringProperty();
         this.linkedinLink = new SimpleStringProperty();
@@ -48,15 +45,15 @@ public class Contact implements Serializable {
     }
 
     // Getters and setters for optional attributes
-    public String getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate.get();
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate.set(birthDate);
     }
 
-    public StringProperty birthDateProperty() {
+    public ObjectProperty<LocalDate> birthDateProperty() {
         return birthDate;
     }
 
@@ -145,18 +142,18 @@ public class Contact implements Serializable {
         return firstName;
     }
 
-    public Gender getGender() {
+    public String getGender() {
         return gender.get();
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(String gender) {
         if (gender == null) {
             throw new IllegalArgumentException("Gender cannot be null");
         }
         this.gender.set(gender);
     }
 
-    public ObjectProperty<Gender> genderProperty() {
+    public StringProperty genderProperty() {
         return gender;
     }
 
@@ -209,8 +206,8 @@ public class Contact implements Serializable {
     @Override
     public String toString() {
         return "Contact{" +
-                "lastName='" + lastName.get() + '\'' +
-                ", firstName='" + firstName.get() + '\'' +
+                "firstName='" + firstName.get() + '\'' +
+                ", lastName='" + lastName.get() + '\'' +
                 ", gender='" + gender.get() + '\'' +
                 ", birthDate='" + birthDate.get() + '\'' +
                 ", pseudo='" + pseudo.get() + '\'' +
