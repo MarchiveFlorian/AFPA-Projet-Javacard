@@ -2,6 +2,7 @@ package fr.afpa.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,6 +13,9 @@ public class Contact implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final StringProperty firstName;
+    private final StringProperty lastName;
+    private final StringProperty gender;
+    private final ObjectProperty<LocalDate> birthDate;
     private final StringProperty lastName;
     private final StringProperty gender;
     private final ObjectProperty<LocalDate> birthDate;
@@ -32,6 +36,8 @@ public class Contact implements Serializable {
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
         this.gender = new SimpleStringProperty(gender);
+        this.lastName = new SimpleStringProperty(lastName);
+        this.gender = new SimpleStringProperty(gender);
         this.address = new SimpleStringProperty(address);
         this.personalPhoneNumber = new SimpleStringProperty(personalPhoneNumber);
         this.emailAddress = new SimpleStringProperty(emailAddress);
@@ -46,13 +52,16 @@ public class Contact implements Serializable {
 
     // Getters and setters for optional attributes
     public LocalDate getBirthDate() {
+    public LocalDate getBirthDate() {
         return birthDate.get();
     }
 
     public void setBirthDate(LocalDate birthDate) {
+    public void setBirthDate(LocalDate birthDate) {
         this.birthDate.set(birthDate);
     }
 
+    public ObjectProperty<LocalDate> birthDateProperty() {
     public ObjectProperty<LocalDate> birthDateProperty() {
         return birthDate;
     }
@@ -143,6 +152,7 @@ public class Contact implements Serializable {
     }
 
     public String getGender() {
+    public String getGender() {
         return gender.get();
     }
 
@@ -153,6 +163,7 @@ public class Contact implements Serializable {
         this.gender.set(gender);
     }
 
+    public StringProperty genderProperty() {
     public StringProperty genderProperty() {
         return gender;
     }
@@ -206,6 +217,8 @@ public class Contact implements Serializable {
     @Override
     public String toString() {
         return "Contact{" +
+                "firstName='" + firstName.get() + '\'' +
+                ", lastName='" + lastName.get() + '\'' +
                 "firstName='" + firstName.get() + '\'' +
                 ", lastName='" + lastName.get() + '\'' +
                 ", gender='" + gender.get() + '\'' +
