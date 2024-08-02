@@ -4,6 +4,7 @@ import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import fr.afpa.models.Contact;
+import javafx.collections.ObservableList;
 import ezvcard.property.Email;
 import ezvcard.property.Address;
 import ezvcard.property.Gender;
@@ -110,7 +111,7 @@ public class ContactVCardSerializer implements Serializer<Contact> {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void saveList(String filePath, ArrayList<Contact> contacts) throws IOException {
+    public void saveList(String filePath, ObservableList<Contact> contacts) throws IOException {
         try (FileOutputStream fos = new FileOutputStream(filePath);
              VCardWriter writer = new VCardWriter(fos, ezvcard.VCardVersion.V4_0)) {
             for (Contact contact : contacts) {

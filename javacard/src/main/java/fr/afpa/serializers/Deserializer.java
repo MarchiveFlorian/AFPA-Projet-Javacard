@@ -3,6 +3,8 @@ package fr.afpa.serializers;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.collections.ObservableList;
+
 /**
  * An interface defining methods for deserializing objects.
  *
@@ -17,7 +19,7 @@ public interface Deserializer<T> {
      * @throws IOException if an I/O error occurs
      * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
-    ArrayList<T> loadList(String filePath) throws IOException, ClassNotFoundException;
+    ObservableList<T> loadList(String filePath) throws IOException, ClassNotFoundException;
 
     /**
      * Loads a single object from a specified file.

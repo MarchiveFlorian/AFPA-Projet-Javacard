@@ -3,6 +3,8 @@ package fr.afpa.serializers;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javafx.collections.ObservableList;
+
 /**
  * An interface defining methods for serializing objects.
  *
@@ -16,7 +18,7 @@ public interface Serializer<T> {
      * @param objectsToSave the list of objects to save
      * @throws IOException if an I/O error occurs
      */
-    void saveList(String filePath, ArrayList<T> objectsToSave) throws IOException;
+    void saveList(String filePath, ObservableList<T> objectsToSave) throws IOException;
 
     /**
      * Saves a single object to a specified file.

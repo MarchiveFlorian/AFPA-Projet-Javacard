@@ -1,10 +1,14 @@
 package fr.afpa.controllers;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.afpa.models.Contact;
+import fr.afpa.serializers.ContactBinarySerializer;
+import fr.afpa.serializers.ContactVCardSerializer;
+import fr.afpa.serializers.Serializer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -288,6 +292,7 @@ public class UserManagerController {
     void export(ActionEvent e) {
 
         String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
+        ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
 
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
@@ -295,6 +300,22 @@ public class UserManagerController {
             switch (selectedFormat) {
                 case "vCard":
                     // TO DO Link with VCard Logic
+
+                    try {
+                         // Create instances of serializers
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
+                        ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+
+                        // Save contacts using the created instances
+                        vCardSerializer.saveList("contacts.vcf", selectedContacts);
+                        binarySerializer.saveList("contacts.bin", selectedContacts);
+
+                        System.out.println("Contacts exported successfully in vCard format.");
+
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
+                    }
+
                     System.out.println("Exporting as vCard");
                     break;
                 case "JSON":

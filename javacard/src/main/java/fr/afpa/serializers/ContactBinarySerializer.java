@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 import fr.afpa.models.Contact;
+import javafx.collections.ObservableList;
 
 /**
  * A class that serializes and deserializes Contact objects to/from binary format.
@@ -18,7 +19,7 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
      * @throws IOException if an I/O error occurs
      */
     @Override
-    public void saveList(String filePath, ArrayList<Contact> contacts) throws IOException { 
+    public void saveList(String filePath, ObservableList<Contact> contacts) throws IOException { 
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filePath))) {
             out.writeObject(contacts);
         }
@@ -47,9 +48,9 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
      * @throws ClassNotFoundException if the class of a serialized object cannot be found
      */
     @Override
-    public ArrayList<Contact> loadList(String filePath) throws IOException, ClassNotFoundException {
+    public ObservableList<Contact> loadList(String filePath) throws IOException, ClassNotFoundException {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(filePath))) {
-            return (ArrayList<Contact>) in.readObject();
+            return (ObservableList<Contact>) in.readObject();
         }
     }
 
