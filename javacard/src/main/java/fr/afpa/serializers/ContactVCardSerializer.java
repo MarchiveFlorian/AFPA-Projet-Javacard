@@ -1,14 +1,14 @@
-package fr.afpa.SerializersManager;
+package fr.afpa.serializers;
 
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
+import fr.afpa.models.Contact;
 import ezvcard.property.Email;
 import ezvcard.property.Address;
 import ezvcard.property.Gender;
 import ezvcard.property.Birthday;
 import ezvcard.io.text.VCardWriter;
-import fr.afpa.Models.Contact;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
