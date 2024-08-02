@@ -136,13 +136,12 @@ public class UserManagerController {
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
         // ***
         // Load contacts from binary file
-        // Load contacts from binary file
         try {
             ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
             ArrayList<Contact> loadedContacts = binarySerializer.loadList("contacts.bin");
             contacts.addAll(loadedContacts);
         } catch (IOException | ClassNotFoundException e) {
-        System.out.println("Failed to load contacts from binary file: " + e.getMessage());
+            System.out.println("Failed to load contacts from binary file: " + e.getMessage());
         }
 
         columnFirstName.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
@@ -302,7 +301,16 @@ public class UserManagerController {
 
         String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
         ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
-
+        // Convert ObservableList to ArrayList
+        ArrayList<Contact> contactsList = new ArrayList<>();
+        // Convert attributes
+        for (Contact contact : selectedContacts) {
+            Contact newContact = new Contact(contact.getFirstName(), contact.getLastName(), contact.getGender(), contact.getBirthDate(), 
+            contact.getNickname(), contact.getAddress(), contact.getPersonalPhoneNumber(), contact.getProfessionalPhoneNumber(),
+            contact.getEmailAddress(), contact.getLinkedinLink(), contact.getGithubGitlabLink());
+            contactsList.add(newContact);
+        }
+        
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
         } else {
@@ -312,15 +320,10 @@ public class UserManagerController {
                     try {
                         ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
                         ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-    
-                        // Convert ObservableList to ArrayList
-                        ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
-    
+
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
                         binarySerializer.saveList("contacts.bin", contactsList);
-    
-                        System.out.println("Contacts exported successfully in vCard format.");
     
                         System.out.println("Contacts exported successfully in vCard format.");
                     } catch (IOException ex) {
