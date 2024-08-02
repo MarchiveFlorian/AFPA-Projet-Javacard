@@ -1,6 +1,7 @@
 package fr.afpa.controllers;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,10 @@ import fr.afpa.models.Contact;
 import fr.afpa.serializers.ContactBinarySerializer;
 import fr.afpa.serializers.ContactVCardSerializer;
 
-import java.io.IOException; 
+import java.io.IOException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -65,6 +67,9 @@ public class UserManagerController {
     private TextField textFieldGitHub;
 
     @FXML
+    private TextField researchField;
+
+    @FXML
     private ComboBox<String> comboBoxGender;
 
     @FXML
@@ -117,7 +122,7 @@ public class UserManagerController {
 
         tableView4columns.setItems(contacts); // TO DO initialize
 
-        // ChangeListener listening to selection 
+        // ChangeListener listening to selection
         tableView4columns.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             hBoxForm.setVisible(true);
             updateForm(newValue);
@@ -142,7 +147,7 @@ public class UserManagerController {
             ArrayList<Contact> loadedContacts = binarySerializer.loadList("contacts.bin");
             contacts.addAll(loadedContacts);
         } catch (IOException | ClassNotFoundException e) {
-        System.out.println("Failed to load contacts from binary file: " + e.getMessage());
+            System.out.println("Failed to load contacts from binary file: " + e.getMessage());
         }
 
         columnFirstName.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
@@ -150,6 +155,44 @@ public class UserManagerController {
         columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
         columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
 
+        // RESEARCH FUNCTION
+
+        // Creation of the Filtered list
+        FilteredList<Contact> filteredList = new FilteredList<>(contacts, p -> true);
+
+        // Link between Filtered list and TableView
+        tableView4columns.setItems(filteredList);
+
+        // DateTimeFormatter LocalDate -> String
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // Listener on the TextField researchField
+        researchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredList.setPredicate(contact -> {
+                // If field empty -> show all contacts
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                // Compare search text with contact properties
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (contact.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getLastName().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getGender().equalsIgnoreCase(newValue) || //Male is in Female in lowercase
+                        contact.getBirthDate().format(dateFormatter).contains(lowerCaseFilter) ||
+                        contact.getNickname().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getAddress().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getPersonalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getProfessionalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getEmailAddress().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getLinkedinLink().toLowerCase().contains(lowerCaseFilter) ||
+                        contact.getGithubGitlabLink().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
     }
 
     /**
@@ -312,16 +355,16 @@ public class UserManagerController {
                     try {
                         ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
                         ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-    
+
                         // Convert ObservableList to ArrayList
                         ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
-    
+
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
                         binarySerializer.saveList("contacts.bin", contactsList);
-    
+
                         System.out.println("Contacts exported successfully in vCard format.");
-    
+
                         System.out.println("Contacts exported successfully in vCard format.");
                     } catch (IOException ex) {
                         System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
