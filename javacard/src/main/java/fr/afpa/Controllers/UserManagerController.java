@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.afpa.models.Contact;
+import fr.afpa.serializers.ContactBinarySerializer;
+import fr.afpa.serializers.ContactVCardSerializer;
+
+import java.io.IOException; 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -131,6 +135,15 @@ public class UserManagerController {
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
         // ***
+        // Load contacts from binary file
+        // Load contacts from binary file
+        try {
+            ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+            ArrayList<Contact> loadedContacts = binarySerializer.loadList("contacts.bin");
+            contacts.addAll(loadedContacts);
+        } catch (IOException | ClassNotFoundException e) {
+        System.out.println("Failed to load contacts from binary file: " + e.getMessage());
+        }
 
         columnFirstName.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
         columnLastName.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
@@ -288,6 +301,7 @@ public class UserManagerController {
     void export(ActionEvent e) {
 
         String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
+        ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
 
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
@@ -295,6 +309,23 @@ public class UserManagerController {
             switch (selectedFormat) {
                 case "vCard":
                     // TO DO Link with VCard Logic
+                    try {
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
+                        ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+    
+                        // Convert ObservableList to ArrayList
+                        ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
+    
+                        // Save contacts using the created instances
+                        vCardSerializer.saveList("contacts.vcf", contactsList);
+                        binarySerializer.saveList("contacts.bin", contactsList);
+    
+                        System.out.println("Contacts exported successfully in vCard format.");
+    
+                        System.out.println("Contacts exported successfully in vCard format.");
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
+                    }
                     System.out.println("Exporting as vCard");
                     break;
                 case "JSON":
