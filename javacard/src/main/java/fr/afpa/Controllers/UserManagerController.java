@@ -276,12 +276,53 @@ public class UserManagerController {
 
             resetForm();
             hBoxForm.setVisible(false);
-        } else {
-            // Error message
-            System.out.println("Please select a contact to update.");
 
+            resetFieldStyles();
+
+        }else{
+
+            if (textFieldFirstName.getText().isEmpty()) {
+                textFieldFirstName.getStyleClass().add("text-field-error");
+            } 
+
+            if (textFieldLastName.getText().isEmpty()) {
+                textFieldLastName.getStyleClass().add("text-field-error");
+            } 
+
+            if (comboBoxGender.getValue() == null || comboBoxGender.getValue().isEmpty()) {
+                comboBoxGender.getStyleClass().add("combo-box-error");
+            } 
+
+            if (datePickerBirthday.getValue() == null) {
+                datePickerBirthday.getStyleClass().add("date-picker-error");
+            }
+
+            if (textFieldNumber.getText().isEmpty()) {
+                textFieldNumber.getStyleClass().add("text-field-error");
+            } 
+
+            if (textFieldMail.getText().isEmpty()) {
+                textFieldMail.getStyleClass().add("text-field-error");
+            } 
+
+            if (textFieldLinkedin.getText().isEmpty()) {
+                textFieldLinkedin.getStyleClass().add("text-field-error");
+            } 
         }
     }
+
+    //RESET RED ERROR
+    @FXML 
+    private void resetFieldStyles() {
+        textFieldFirstName.getStyleClass().remove("text-field-error");
+        textFieldLastName.getStyleClass().remove("text-field-error");
+        comboBoxGender.getStyleClass().remove("combo-box-error");
+        datePickerBirthday.getStyleClass().remove("date-picker-error");
+        textFieldNumber.getStyleClass().remove("text-field-error");
+        textFieldMail.getStyleClass().remove("text-field-error");
+        textFieldLinkedin.getStyleClass().remove("text-field-error");
+    }
+
 
     // NEW BUTTON
     @FXML

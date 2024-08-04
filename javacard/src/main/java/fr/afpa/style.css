@@ -1,8 +1,21 @@
 .text-field-error {
     -fx-border-color: red;
     -fx-border-width: 2px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 2.5;
 }
 
-.label-error {
-    -fx-text-fill: red;
+.combo-box-error {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.date-picker-error {
+    -fx-border-color: red;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
 }

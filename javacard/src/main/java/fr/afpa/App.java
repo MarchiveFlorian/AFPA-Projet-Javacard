@@ -34,6 +34,7 @@ public class App extends Application {
 
         // INSTANCIATION
         scene = new Scene(loadFXML("visit_card_manager"), 1024, 600);
+        scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
