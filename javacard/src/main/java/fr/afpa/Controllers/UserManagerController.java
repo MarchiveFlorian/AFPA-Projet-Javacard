@@ -305,28 +305,8 @@ public class UserManagerController {
 
         // Convert ObservableList to ArrayList
         ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
-        ArrayList<Contact> contactsList = new ArrayList<>();
-        // Convert attributes
-        for (Contact contact : selectedContacts) {
-            // Convert properties to standard type
-            String firstName = contact.getFirstName();
-            String lastName = contact.getLastName();
-            String gender = contact.getGender();
-            LocalDate birthDate = contact.getBirthDate();
-            String nickname = contact.getNickname();
-            String address = contact.getAddress();
-            String personalPhoneNumber = contact.getPersonalPhoneNumber();
-            String professionalPhoneNumber = contact.getProfessionalPhoneNumber();
-            String emailAddress = contact.getEmailAddress();
-            String linkedinLink = contact.getLinkedinLink();
-            String githubGitlabLink = contact.getGithubGitlabLink();
-        
-            Contact newContact = new Contact(firstName, lastName, gender, birthDate, nickname, address,
-                                         personalPhoneNumber, professionalPhoneNumber, emailAddress,
-                                         linkedinLink, githubGitlabLink);
-            contactsList.add(newContact);
-        }
-        
+        ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
+
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
         } else {
@@ -342,10 +322,8 @@ public class UserManagerController {
                         binarySerializer.saveList("contacts.bin", contactsList);
     
                         System.out.println("Contacts exported successfully in vCard format.");
-                        System.out.println(contactsList);
                     } catch (IOException ex) {
                         System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
-                        System.out.println(contactsList);
                     }
                     System.out.println("Exporting as vCard");
                     break;
