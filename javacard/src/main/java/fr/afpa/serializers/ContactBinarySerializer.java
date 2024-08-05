@@ -30,7 +30,7 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
      * Saves a single Contact object to a specified file.
      * 
      * @param filePath the path of the file where the contact should be saved
-     * @param contact the Contact object to save
+     * @param contact  the Contact object to save
      * @throws IOException if an I/O error occurs
      */
     @Override
@@ -46,8 +46,9 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
      * 
      * @param filePath the path of the file from which the contacts should be loaded
      * @return the list of loaded Contact objects
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     * @throws IOException            if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be
+     *                                found
      */
     @Override
     public ArrayList<Contact> loadList(String filePath) throws IOException, ClassNotFoundException {
@@ -68,8 +69,9 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
      * 
      * @param filePath the path of the file from which the contact should be loaded
      * @return the loaded Contact object
-     * @throws IOException if an I/O error occurs
-     * @throws ClassNotFoundException if the class of a serialized object cannot be found
+     * @throws IOException            if an I/O error occurs
+     * @throws ClassNotFoundException if the class of a serialized object cannot be
+     *                                found
      */
     @Override
     public Contact load(String filePath) throws IOException, ClassNotFoundException {

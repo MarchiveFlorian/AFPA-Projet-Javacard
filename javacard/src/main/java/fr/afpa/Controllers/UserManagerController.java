@@ -10,6 +10,7 @@ import fr.afpa.serializers.ContactVCardSerializer;
 
 import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class UserManagerController {
 
@@ -125,14 +127,14 @@ public class UserManagerController {
             updateForm(newValue);
         });
 
-        contacts.addAll(
-                new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-                        "", "chloe.boivin@outlook.com",
-                        "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-                        "0613206966",
-                        "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-                        "https://github.com/MarchiveFlorian"));
+        // contacts.addAll(
+        //         new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+        //                 "", "chloe.boivin@outlook.com",
+        //                 "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+        //         new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+        //                 "0613206966",
+        //                 "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
+        //                 "https://github.com/MarchiveFlorian"));
 
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
@@ -152,6 +154,24 @@ public class UserManagerController {
         columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
         columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
 
+         // Add a listener to handle window close event
+        Platform.runLater(() -> {
+            Stage stage = (Stage) tableView4columns.getScene().getWindow();
+            stage.setOnCloseRequest(event -> saveContactsOnClose());
+        });
+    }
+
+    /**
+     * Saves the contacts to a binary file when the application is closed.
+     */
+    private void saveContactsOnClose() {
+        try {
+            ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+            binarySerializer.saveList("contacts.bin", new ArrayList<>(contacts));
+            System.out.println("Contacts saved successfully on close.");
+        } catch (IOException e) {
+            System.out.println("Failed to save contacts on close: " + e.getMessage());
+        }
     }
 
     /**
@@ -315,12 +335,9 @@ public class UserManagerController {
                 case "vCard":
                     // TO DO Link with VCard Logic
                     try {
-                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
-                        ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();                
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
-                        binarySerializer.saveList("contacts.bin", contactsList);
     
                         System.out.println("Contacts exported successfully in vCard format.");
                     } catch (IOException ex) {
