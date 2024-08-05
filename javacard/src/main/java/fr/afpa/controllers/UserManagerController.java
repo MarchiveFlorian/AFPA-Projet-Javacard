@@ -14,6 +14,7 @@ import fr.afpa.serializers.ContactVCardSerializer;
 import java.io.IOException;
 
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -29,6 +30,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 public class UserManagerController {
 
@@ -136,19 +138,18 @@ public class UserManagerController {
             updateForm(newValue);
         });
 
-        contacts.addAll(
-                new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-                        "", "chloe.boivin@outlook.com",
-                        "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-                        "0613206966",
-                        "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-                        "https://github.com/MarchiveFlorian"));
+        // contacts.addAll(
+        //         new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+        //                 "", "chloe.boivin@outlook.com",
+        //                 "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+        //         new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+        //                 "0613206966",
+        //                 "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
+        //                 "https://github.com/MarchiveFlorian"));
 
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
         // ***
-        // Load contacts from binary file
         // Load contacts from binary file
         try {
             ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
@@ -162,6 +163,12 @@ public class UserManagerController {
         columnLastName.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
         columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
         columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
+
+         // Add a listener to handle window close event
+        Platform.runLater(() -> {
+            Stage stage = (Stage) tableView4columns.getScene().getWindow();
+            stage.setOnCloseRequest(event -> saveContactsOnClose());
+        });
 
         // RESEARCH FUNCTION
 
@@ -185,6 +192,20 @@ public class UserManagerController {
             researchField.requestFocus(); // Requests focus on the search field
             researchField.getParent().requestFocus(); // Moves focus away from the search field
         });
+    }
+
+    /**
+     * Saves the contacts to a binary file when the application is closed.
+     */
+    private void saveContactsOnClose() {
+        try {
+            ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+            binarySerializer.clearFile("contacts.bin");
+            binarySerializer.saveList("contacts.bin", new ArrayList<>(contacts));
+            System.out.println("Contacts saved successfully on close.");
+        } catch (IOException e) {
+            System.out.println("Failed to save contacts on close: " + e.getMessage());
+        }
     }
 
     @FXML
@@ -425,7 +446,10 @@ public class UserManagerController {
     void export(ActionEvent e) {
 
         String selectedFormat = comboBoxSelectFormat.getSelectionModel().getSelectedItem();
+
+        // Convert ObservableList to ArrayList
         ObservableList<Contact> selectedContacts = tableView4columns.getSelectionModel().getSelectedItems();
+        ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
 
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
@@ -434,24 +458,19 @@ public class UserManagerController {
                 case "vCard":
                     // TO DO Link with VCard Logic
                     try {
-                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
-                        ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-
-                        // Convert ObservableList to ArrayList
-                        ArrayList<Contact> contactsList = new ArrayList<>(selectedContacts);
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();    
 
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
-                        binarySerializer.saveList("contacts.bin", contactsList);
-
                         System.out.println("Contacts exported successfully in vCard format.");
 
-                        System.out.println("Contacts exported successfully in vCard format.");
                     } catch (IOException ex) {
                         System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
                     }
+
                     System.out.println("Exporting as vCard");
                     break;
+
                 case "JSON":
                     // TO DO Link with JSON Logic
                     System.out.println("Exporting as JSON");

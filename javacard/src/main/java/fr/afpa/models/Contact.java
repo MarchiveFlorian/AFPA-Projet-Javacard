@@ -1,4 +1,4 @@
-package fr.afpa.models; 
+package fr.afpa.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -24,7 +24,9 @@ public class Contact implements Serializable {
     private final StringProperty githubGitlabLink;
 
     // Constructor for required attributes
-    public Contact(String firstName, String lastName, String gender, LocalDate birthDate, String pseudo, String address, String personalPhoneNumber, String professionalPhoneNumber,  String emailAddress, String linkedinLink, String githubGitlabLink) {
+    public Contact(String firstName, String lastName, String gender, LocalDate birthDate, String pseudo, String address,
+            String personalPhoneNumber, String professionalPhoneNumber, String emailAddress, String linkedinLink,
+            String githubGitlabLink) {
 
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
@@ -131,6 +133,7 @@ public class Contact implements Serializable {
     }
 
     public void setGender(String gender) {
+
         this.gender.set(gender);
     }
 
@@ -190,5 +193,44 @@ public class Contact implements Serializable {
                 ", linkedinLink='" + linkedinLink.get() + '\'' +
                 ", githubGitlabLink='" + githubGitlabLink.get() + '\'' +
                 '}';
+    }
+
+    public static class SerializableContact implements Serializable {
+        private static final long serialVersionUID = 1L;
+        private final String firstName;
+        private final String lastName;
+        private final String gender;
+        private final LocalDate birthDate;
+        private final String pseudo;
+        private final String address;
+        private final String personalPhoneNumber;
+        private final String professionalPhoneNumber;
+        private final String emailAddress;
+        private final String linkedinLink;
+        private final String githubGitlabLink;
+
+        public SerializableContact(Contact contact) {
+            this.firstName = contact.getFirstName();
+            this.lastName = contact.getLastName();
+            this.gender = contact.getGender();
+            this.birthDate = contact.getBirthDate();
+            this.pseudo = contact.getNickname();
+            this.address = contact.getAddress();
+            this.personalPhoneNumber = contact.getPersonalPhoneNumber();
+            this.professionalPhoneNumber = contact.getProfessionalPhoneNumber();
+            this.emailAddress = contact.getEmailAddress();
+            this.linkedinLink = contact.getLinkedinLink();
+            this.githubGitlabLink = contact.getGithubGitlabLink();
+        }
+
+        public Contact toContact() {
+            return new Contact(
+                    firstName, lastName, gender, birthDate, pseudo, address, personalPhoneNumber,
+                    professionalPhoneNumber, emailAddress, linkedinLink, githubGitlabLink);
+        }
+    }
+
+    public SerializableContact toSerializableContact() {
+        return new SerializableContact(this);
     }
 }
