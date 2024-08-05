@@ -79,4 +79,17 @@ public class ContactBinarySerializer implements Serializer<Contact>, Deserialize
             return serializableContact.toContact();
         }
     }
+
+    /**
+     * Clears the contents of the specified file.
+     * 
+     * @param fileName the path of the file to clear
+     * @throws IOException if an I/O error occurs
+     */
+    public void clearFile(String fileName) throws IOException {
+        // Opening the file in write mode without adding any content clears it
+        try (FileOutputStream fos = new FileOutputStream(fileName)) {
+            // The file is cleared by this operation
+        }
+    }
 }

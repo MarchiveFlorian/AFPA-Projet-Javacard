@@ -142,6 +142,7 @@ public class UserManagerController {
             ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
             ArrayList<Contact> loadedContacts = binarySerializer.loadList("contacts.bin");
             contacts.addAll(loadedContacts);
+            binarySerializer.clearFile("contacts.bin");
         } catch (IOException | ClassNotFoundException e) {
             System.out.println("Failed to load contacts from binary file: " + e.getMessage());
         }
