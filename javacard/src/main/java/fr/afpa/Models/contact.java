@@ -25,9 +25,6 @@ public class Contact implements Serializable {
 
     // Constructor for required attributes
     public Contact(String firstName, String lastName, String gender, LocalDate birthDate, String pseudo, String address, String personalPhoneNumber, String professionalPhoneNumber,  String emailAddress, String linkedinLink, String githubGitlabLink) {
-        // if (lastName == null || firstName == null || gender == null || address == null || personalPhoneNumber == null || emailAddress == null) {
-        //     throw new IllegalArgumentException("Required fields cannot be null");
-        // }
 
         this.firstName = new SimpleStringProperty(firstName);
         this.lastName = new SimpleStringProperty(lastName);
@@ -35,7 +32,6 @@ public class Contact implements Serializable {
         this.address = new SimpleStringProperty(address);
         this.personalPhoneNumber = new SimpleStringProperty(personalPhoneNumber);
         this.emailAddress = new SimpleStringProperty(emailAddress);
-        setEmailAddress(emailAddress);  // Use setter to validate email
 
         this.birthDate = new SimpleObjectProperty<>(birthDate);
         this.pseudo = new SimpleStringProperty(pseudo);
