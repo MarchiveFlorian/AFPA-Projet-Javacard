@@ -8,8 +8,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import fr.afpa.models.Contact;
-import fr.afpa.serializers.ContactBinarySerializer;
-import fr.afpa.serializers.ContactVCardSerializer;
 
 import java.io.IOException;
 
@@ -138,14 +136,14 @@ public class UserManagerController {
             updateForm(newValue);
         });
 
-        contacts.addAll(
-                new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-                        "", "chloe.boivin@outlook.com",
-                        "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-                        "0613206966",
-                        "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-                        "https://github.com/MarchiveFlorian"));
+        // contacts.addAll(
+                // new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+                //         "", "chloe.boivin@outlook.com",
+                //         "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+                // new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+                //         "0613206966",
+                //         "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
+                //         "https://github.com/MarchiveFlorian"));
 
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
@@ -472,9 +470,19 @@ public class UserManagerController {
                     break;
 
                 case "JSON":
-                    // TO DO Link with JSON Logic
+                try {
+                    ContactJsonSerializer jsonSerializer = new ContactJsonSerializer();    
+
+                    // Save contacts using the created instances
+                    jsonSerializer.saveList("contacts.json", contactsList);
+                    System.out.println("Contacts exported successfully in Json format.");
+
+                } catch (IOException ex) {
+                    System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
+                }
                     System.out.println("Exporting as JSON");
                     break;
+                    
                 case "CSV":
                     // TO DO Link with CSV Logic
                     System.out.println("Exporting as CSV");

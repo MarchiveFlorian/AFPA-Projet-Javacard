@@ -1,8 +1,10 @@
-package fr.afpa.serializers;
+package fr.afpa.controllers;
 
 import java.io.*;
 import java.util.ArrayList;
 import fr.afpa.models.Contact;
+import fr.afpa.serializers.Deserializer;
+import fr.afpa.serializers.Serializer;
 
 public class ContactBinarySerializer implements Serializer<Contact>, Deserializer<Contact> {
 
