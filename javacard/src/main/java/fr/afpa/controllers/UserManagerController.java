@@ -138,14 +138,14 @@ public class UserManagerController {
             updateForm(newValue);
         });
 
-        // contacts.addAll(
-        //         new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-        //                 "", "chloe.boivin@outlook.com",
-        //                 "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-        //         new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-        //                 "0613206966",
-        //                 "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-        //                 "https://github.com/MarchiveFlorian"));
+        contacts.addAll(
+                new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
+                        "", "chloe.boivin@outlook.com",
+                        "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+                new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
+                        "0613206966",
+                        "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
+                        "https://github.com/MarchiveFlorian"));
 
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
