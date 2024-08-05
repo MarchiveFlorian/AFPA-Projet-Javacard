@@ -3,6 +3,7 @@ module fr.afpa {
     requires javafx.fxml;
     requires ez.vcard;
     requires json.simple;
+    requires javafx.graphics;
 
     opens fr.afpa to javafx.fxml;
     opens fr.afpa.controllers to javafx.fxml;

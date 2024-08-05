@@ -27,6 +27,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -168,6 +169,12 @@ public class UserManagerController {
             stage.setOnCloseRequest(event -> saveContactsOnClose());
         });
 
+        //COMBOBOX SELECT FORMAT MOUSE EVENT
+        comboBoxSelectFormat.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            exportButton.getStyleClass().remove("button-error");
+            exportButton.getStyleClass().remove("button-success");
+        });
+
         // RESEARCH FUNCTION
 
         // Creation of the Filtered list
@@ -190,6 +197,7 @@ public class UserManagerController {
             researchField.requestFocus(); // Requests focus on the search field
             researchField.getParent().requestFocus(); // Moves focus away from the search field
         });
+
     }
 
     /**
@@ -451,6 +459,7 @@ public class UserManagerController {
 
         if (selectedFormat == null) {
             System.out.println("Please select a Format");
+            exportButton.getStyleClass().add("button-error");
         } else {
             switch (selectedFormat) {
                 case "vCard":
@@ -464,9 +473,11 @@ public class UserManagerController {
 
                     } catch (IOException ex) {
                         System.out.println("Failed to export contacts in vCard format: " + ex.getMessage());
+                        exportButton.getStyleClass().add("button-error");
                     }
 
                     System.out.println("Exporting as vCard");
+                    exportButton.getStyleClass().add("button-success");
                     break;
 
                 case "JSON":
@@ -479,8 +490,10 @@ public class UserManagerController {
 
                 } catch (IOException ex) {
                     System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
+                    exportButton.getStyleClass().add("button-error");
                 }
                     System.out.println("Exporting as JSON");
+                    exportButton.getStyleClass().add("button-success");
                     break;
                     
                 case "CSV":
