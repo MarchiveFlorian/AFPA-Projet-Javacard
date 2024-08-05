@@ -4,15 +4,20 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import fr.afpa.models.Contact;
 import fr.afpa.serializers.ContactBinarySerializer;
 import fr.afpa.serializers.ContactVCardSerializer;
 
 import java.io.IOException;
+
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -110,6 +115,9 @@ public class UserManagerController {
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     @FXML
+    private FilteredList<Contact> filteredList; //
+
+    @FXML
     private HBox hBoxForm;
 
     @FXML
@@ -158,41 +166,46 @@ public class UserManagerController {
         // RESEARCH FUNCTION
 
         // Creation of the Filtered list
-        FilteredList<Contact> filteredList = new FilteredList<>(contacts, p -> true);
-
-        // Link between Filtered list and TableView
-        tableView4columns.setItems(filteredList);
+        filteredList = new FilteredList<>(contacts, p -> true);
+        SortedList<Contact> sortedData = new SortedList<>(filteredList);
+        sortedData.comparatorProperty().bind(tableView4columns.comparatorProperty());
+        tableView4columns.setItems(sortedData);
 
         // DateTimeFormatter LocalDate -> String
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         // Listener on the TextField researchField
         researchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList.setPredicate(contact -> {
-                // If field empty -> show all contacts
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-
-                // Compare search text with contact properties
-                String lowerCaseFilter = newValue.toLowerCase();
-
-                if (contact.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getLastName().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getGender().equalsIgnoreCase(newValue) || //Male is in Female in lowercase
-                        contact.getBirthDate().format(dateFormatter).contains(lowerCaseFilter) ||
-                        contact.getNickname().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getAddress().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getPersonalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getProfessionalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getEmailAddress().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getLinkedinLink().toLowerCase().contains(lowerCaseFilter) ||
-                        contact.getGithubGitlabLink().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
-                return false;
-            });
+            filteredList.setPredicate(createPredicate(newValue, dateFormatter));
         });
+
+        // After setting up the TableView and contacts, select the first contact
+        Platform.runLater(() -> {
+            // Remove focus from the search field
+            researchField.requestFocus(); // Requests focus on the search field
+            researchField.getParent().requestFocus(); // Moves focus away from the search field
+        });
+    }
+
+    @FXML
+    private Predicate<Contact> createPredicate(String searchText, DateTimeFormatter dateFormatter) {
+        return contact -> {
+            if (searchText == null || searchText.isEmpty()) {
+                return true; // Show all contacts
+            }
+            String lowerCaseFilter = searchText.toLowerCase();
+            return contact.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getLastName().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getGender().toLowerCase().equals(lowerCaseFilter) ||
+                    contact.getBirthDate().format(dateFormatter).contains(lowerCaseFilter) ||
+                    contact.getNickname().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getAddress().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getPersonalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getProfessionalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getEmailAddress().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getLinkedinLink().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getGithubGitlabLink().toLowerCase().contains(lowerCaseFilter);
+        };
     }
 
     /**
@@ -213,10 +226,13 @@ public class UserManagerController {
 
         // Reset Gender ComboBox
         comboBoxGender.getSelectionModel().clearSelection();
-        // comboBoxGender.getSelectionModel().selectFirst(); // select an element
+        comboBoxGender.setPromptText("Required - Select gender");
 
         // Reset DatePicker
         datePickerBirthday.setValue(null);
+
+        // Reset field styles
+        resetFieldStyles();
     }
 
     /**
@@ -225,6 +241,10 @@ public class UserManagerController {
     @FXML
     private void updateForm(Contact contact) {
         if (contact != null) {
+
+            // Reset field styles
+            resetFieldStyles();
+
             textFieldFirstName.setText(contact.getFirstName());
             textFieldLastName.setText(contact.getLastName());
             comboBoxGender.setValue(contact.getGender());
@@ -259,9 +279,51 @@ public class UserManagerController {
         // Get selected contact
         Contact selectedContact = tableView4columns.getSelectionModel().getSelectedItem();
 
-        if (!fName.isEmpty() && !lName.isEmpty() && !gender.isEmpty() && bDay != null && !tNum.isEmpty()
-                && !mail.isEmpty() && !linkd.isEmpty()) { // Are not empty
+        if (selectedContact == null) {
+            System.out.println("No contact selected. Cannot save changes.");
+            return; // Exit the method early
+        }
 
+        boolean valid = true;
+
+        if (fName.isEmpty()) {
+            textFieldFirstName.getStyleClass().add("text-field-error");
+            valid = false;
+        }
+        if (lName.isEmpty()) {
+            textFieldLastName.getStyleClass().add("text-field-error");
+            valid = false;
+        }
+        if (gender == null || gender.isEmpty()) {
+            comboBoxGender.getStyleClass().add("combo-box-error");
+            valid = false;
+        }
+        if (bDay == null) {
+            datePickerBirthday.getStyleClass().add("date-picker-error");
+            valid = false;
+        }
+        if (tNum.isEmpty()) {
+            textFieldNumber.getStyleClass().add("text-field-error");
+            valid = false;
+        }
+
+        if (mail.isEmpty()) {
+            textFieldMail.getStyleClass().add("text-field-error");
+            valid = false;
+        // } else if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail)) {
+        //     textFieldLinkedin.getStyleClass().add("text-field-error");
+        //     valid = false;
+        }
+
+        if (linkd.isEmpty()) {
+            textFieldLinkedin.getStyleClass().add("text-field-error");
+            valid = false;
+        // } else if (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd)) {
+        //     textFieldLinkedin.getStyleClass().add("text-field-error");
+        //     valid = false;
+        }
+
+        if (valid) {
             selectedContact.setFirstName(fName);
             selectedContact.setLastName(lName);
             selectedContact.setGender(gender);
@@ -278,41 +340,13 @@ public class UserManagerController {
             hBoxForm.setVisible(false);
 
             resetFieldStyles();
-
-        }else{
-
-            if (textFieldFirstName.getText().isEmpty()) {
-                textFieldFirstName.getStyleClass().add("text-field-error");
-            } 
-
-            if (textFieldLastName.getText().isEmpty()) {
-                textFieldLastName.getStyleClass().add("text-field-error");
-            } 
-
-            if (comboBoxGender.getValue() == null || comboBoxGender.getValue().isEmpty()) {
-                comboBoxGender.getStyleClass().add("combo-box-error");
-            } 
-
-            if (datePickerBirthday.getValue() == null) {
-                datePickerBirthday.getStyleClass().add("date-picker-error");
-            }
-
-            if (textFieldNumber.getText().isEmpty()) {
-                textFieldNumber.getStyleClass().add("text-field-error");
-            } 
-
-            if (textFieldMail.getText().isEmpty()) {
-                textFieldMail.getStyleClass().add("text-field-error");
-            } 
-
-            if (textFieldLinkedin.getText().isEmpty()) {
-                textFieldLinkedin.getStyleClass().add("text-field-error");
-            } 
+        } else {
+            System.out.println("Form contains errors. Please correct them.");
         }
     }
 
-    //RESET RED ERROR
-    @FXML 
+    // RESET RED ERROR
+    @FXML
     private void resetFieldStyles() {
         textFieldFirstName.getStyleClass().remove("text-field-error");
         textFieldLastName.getStyleClass().remove("text-field-error");
@@ -323,18 +357,22 @@ public class UserManagerController {
         textFieldLinkedin.getStyleClass().remove("text-field-error");
     }
 
-
     // NEW BUTTON
     @FXML
     private void newC(ActionEvent e) {
 
         resetForm();
+        comboBoxGender.getSelectionModel().clearSelection();
+        comboBoxGender.setPromptText("Required - Select gender");
         hBoxForm.setVisible(true);
 
-        Contact newContact = new Contact("NEW", "-", null, null, null, null, "-", null, "-", null, null);
+        Contact newContact = new Contact("NEW", "-", null, null, null, null, "-", null, "-", "", null);
 
-        // Add new Contact to tableView
-        tableView4columns.getItems().add(newContact);
+        // Add new contact to the original (non-filtered) list
+        contacts.add(newContact);
+
+        // Refresh the TableView
+        tableView4columns.refresh();
 
         // Clear selection -> not to have many selected items
         tableView4columns.getSelectionModel().clearSelection();
@@ -342,8 +380,10 @@ public class UserManagerController {
         // Select new Contact
         tableView4columns.getSelectionModel().select(newContact);
 
-        // Focus on the line -> visibility
-        tableView4columns.getSelectionModel().select(newContact);
+        // Force the TableView to update the selection
+        Platform.runLater(() -> {
+            tableView4columns.getSelectionModel().select(newContact);
+        });
 
     }
 
