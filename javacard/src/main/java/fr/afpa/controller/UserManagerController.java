@@ -1,4 +1,4 @@
-package fr.afpa.controllers;
+package fr.afpa.controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import fr.afpa.models.Contact;
+import fr.afpa.model.Contact;
 import fr.afpa.serializers.ContactBinarySerializer;
 import fr.afpa.serializers.ContactVCardSerializer;
 
