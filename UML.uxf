@@ -1,0 +1,94 @@
+<diagram program="umletino" version="15.1"><zoom_level>11</zoom_level><help_text></help_text><element><id>UMLClass</id><coordinates><x>231</x><y>220</y><w>297</w><h>385</h></coordinates><panel_attributes>&lt;&lt;Contact&gt;&gt;
+Package::models
+--
+-firstName: StringProperty
+-lastName: StringProperty
+-gender: StringProperty
+-birthDate: ObjectProperty&lt;LocalDate&gt;
+-pseudo: StringProperty
+-address: StringProperty
+-personalPhoneNumber: StringProperty
+-professionnalPhoneNumber: StringProperty
+-emailAddress: StringProperty
+-linkedinLink: StringProperty
+-githubGitlabLink: StringProperty
+
+--
+constructor()
+--
+-Getters
+-Setters
++ toString()
+-SerializableContact
++ toContact()
++ toSerializableContact()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>231</x><y>0</y><w>231</w><h>99</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+java.io.Serializable
+--
+
+--
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>88</y><w>121</w><h>154</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>10;10;10;120</additional_attributes></element><element><id>UMLNote</id><coordinates><x>0</x><y>528</y><w>187</w><h>77</h></coordinates><panel_attributes>SeriazableContact
+toContact()
+toSerializableContact()
+-&gt; allow serializable contact
+bg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>220</y><w>231</w><h>88</h></coordinates><panel_attributes>&lt;&lt;ContactJsonSerializer&gt;&gt;
+Package::controllers
+--
+
+--
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>341</y><w>231</w><h>110</h></coordinates><panel_attributes>&lt;&lt;ContactVcardSerializer&gt;&gt;
+Package::controllers
+--
+
+--
+
++ contactToVcard()
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>693</x><y>495</y><w>231</w><h>110</h></coordinates><panel_attributes>&lt;&lt;ContactBinarySerializer&gt;&gt;
+Package::controllers
+--
+
+--
+
++ clearFile()
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>517</x><y>242</y><w>198</w><h>176</h></coordinates><panel_attributes>lt=&lt;..
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;140;160;10</additional_attributes></element><element><id>Relation</id><coordinates><x>517</x><y>352</y><w>198</w><h>66</h></coordinates><panel_attributes>lt=&lt;..
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;40;160;10</additional_attributes></element><element><id>Relation</id><coordinates><x>517</x><y>385</y><w>198</w><h>154</h></coordinates><panel_attributes>lt=&lt;..
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;160;120</additional_attributes></element><element><id>UMLNote</id><coordinates><x>583</x><y>88</y><w>220</w><h>77</h></coordinates><panel_attributes>Classes that enable saving 
+objects of the "Contact" class in 
+the various expected formats.
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>715</x><y>154</y><w>33</w><h>88</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>176</x><y>561</y><w>77</w><h>33</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>550</x><y>671</y><w>187</w><h>77</h></coordinates><panel_attributes>"ContactBinarySerializer"
+ is the only the only one that
+implements "Deserialize&lt;T&gt;"
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>693</x><y>594</y><w>33</w><h>99</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;70;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1155</x><y>220</y><w>396</w><h>132</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Serializer&lt;T&gt;
+Package::serializers
+--
+
+--
++ saveList(filePath:String, objectsToSave: ArrayList&lt;T&gt;): void
++ save(filePath: String, T object): void
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1166</x><y>473</y><w>253</w><h>132</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
+Deserializer&lt;T&gt;
+Package::serializers
+--
+
+--
++ loadList(filePath:String): ArrayList&lt;T&gt;
++ load(filePath: String): T 
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>913</x><y>220</y><w>264</w><h>44</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>220;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>913</x><y>264</y><w>264</w><h>121</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>220;10;10;90</additional_attributes></element><element><id>Relation</id><coordinates><x>913</x><y>308</y><w>264</w><h>220</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>220;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>913</x><y>506</y><w>275</w><h>44</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>230;20;10;20</additional_attributes></element></diagram>
