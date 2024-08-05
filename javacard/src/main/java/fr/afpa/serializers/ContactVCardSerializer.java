@@ -3,7 +3,7 @@ package fr.afpa.serializers;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
-import fr.afpa.model.Contact;
+import fr.afpa.models.Contact;
 import ezvcard.property.Email;
 import ezvcard.property.Address;
 import ezvcard.property.Gender;

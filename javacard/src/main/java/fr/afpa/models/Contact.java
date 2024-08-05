@@ -1,4 +1,4 @@
-package fr.afpa.model; 
+package fr.afpa.models; 
 
 import java.io.Serializable;
 import java.time.LocalDate;
