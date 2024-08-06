@@ -1,10 +1,1 @@
-[[{"Value":"Chloé","Key":"FirstName"},
-{"Value":"Boivin","Key":"LastName"},
-{"Value":"Female","Key":"Gender"},
-{"Value":"1995-07-19","Key":"BirthDate"},
-{"Value":"bulo","Key":"Pseudo"},
-{"Value":"Bordeaux","Key":"Address"},
-{"Value":"0604138029","Key":"PersonalPhoneNumber"},
-{"Value":"","Key":"ProfessionalPhoneNumber"},
-{"Value":"chloe.boivin@outlook.com","Key":"EmailAddress"},
-{"Value":"https:\/\/www.linkedin.com\/in\/chloe-boivin\/","Key":"LinkedinLink"},{"Value":"https:\/\/github.com\/bu-lo","Key":"GithubGitlabLink"}],[{"Value":"Lucas","Key":"FirstName"},{"Value":"Clavières","Key":"LastName"},{"Value":"Male","Key":"Gender"},{"Value":"2024-08-06","Key":"BirthDate"},{"Value":"Lumyn","Key":"Pseudo"},{"Value":"oui","Key":"Address"},{"Value":"09","Key":"PersonalPhoneNumber"},{"Value":null,"Key":"ProfessionalPhoneNumber"},{"Value":"-","Key":"EmailAddress"},{"Value":"ouui","Key":"LinkedinLink"},{"Value":null,"Key":"GithubGitlabLink"}]]
+[[{"Value":"Chloé","Key":"FirstName"},{"Value":"Boivin","Key":"LastName"},{"Value":"Female","Key":"Gender"},{"Value":"1995-07-19","Key":"BirthDate"},{"Value":"bulo","Key":"Pseudo"},{"Value":"Bordeaux","Key":"Address"},{"Value":"0604138029","Key":"PersonalPhoneNumber"},{"Value":"","Key":"ProfessionalPhoneNumber"},{"Value":"chloe.boivin@outlook.com","Key":"EmailAddress"},{"Value":"https:\/\/www.linkedin.com\/in\/chloe-boivin\/","Key":"LinkedinLink"},{"Value":"https:\/\/github.com\/bu-lo","Key":"GithubGitlabLink"}]]

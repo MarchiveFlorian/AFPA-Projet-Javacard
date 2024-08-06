@@ -4,11 +4,18 @@ import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import fr.afpa.models.Contact;
+import fr.afpa.controllers.ContactQRcodeSerializer;
 
 import java.io.IOException;
 
@@ -90,7 +97,7 @@ public class UserManagerController {
 
     @FXML
     private void initComboBoxSelectFormat() {
-        comboBoxSelectFormat.getItems().addAll("vCard", "JSON", "CSV", "QRCode");
+        comboBoxSelectFormat.getItems().addAll("vCard", "JSON", "CSV", "QRCode (1 contact)");
     }
 
     @FXML
@@ -548,15 +555,56 @@ public class UserManagerController {
                     break;
 
                 case "CSV":
-                    // TO DO Link with CSV Logic
+                    try {
+                        ContactCsvSerializer csvSerializer = new ContactCsvSerializer();
+                        csvSerializer.saveList("contacts.csv", contactsList);
+                        System.out.println("Contacts exported successfully in CSV format.");
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in CSV format: " + ex.getMessage());
+                        exportButton.getStyleClass().add("button-error");
+                    }
                     System.out.println("Exporting as CSV");
+                    exportButton.getStyleClass().add("button-success");
                     break;
-                case "QRCode":
-                    // TO DO Link with QRCode Logic
+
+                    case "QRCode (1 contact)":
+                    try {
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
+                        
+                        // Save contacts using the created instances
+                        vCardSerializer.saveList("contactsQRcode.vcf", contactsList);
+                        
+                        // The path to the vCard file
+                        String vcardFilePath = "contactsQRcode.vcf";
+                        
+                        // Read the contents of the vCard file
+                        String vcardString = ContactQRcodeSerializer.readFileAsString(vcardFilePath);
+                        
+                        // The path where the QR code image will be saved
+                        String qrCodeImagePath = "QRcode.png";
+                        
+                        // Encoding charset
+                        String charset = "UTF-8";
+                        
+                        // Creating a map to define the error correction level of the QR code
+                        Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<>();
+                        hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+                        
+                        // Call the createQR method to create and save the QR code as a PNG file
+                        ContactQRcodeSerializer.createQR(vcardString, qrCodeImagePath, charset, hashMap, 200, 200);
+                        System.out.println("QR Code Generated!!!");
+                        
+                        // If QR code generation is successful, add success style to export button
+                        exportButton.getStyleClass().add("button-success");
+                        
+                    } catch (WriterException | IOException ex) {
+                        // If there is an exception, print the error message and add error style to export button
+                        System.out.println("Failed to export contacts in QRCode format: " + ex.getMessage());
+                        exportButton.getStyleClass().add("button-error");
+                    }
                     System.out.println("Exporting as QRCode");
                     break;
             }
         }
     }
-
 }
