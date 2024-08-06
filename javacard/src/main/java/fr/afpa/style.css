@@ -3,7 +3,7 @@
     -fx-border-width: 2px;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
-    -fx-padding: 2.5;
+    -fx-border-insets: 0px;
 }
 
 .combo-box-error {
@@ -11,6 +11,7 @@
     -fx-border-width: 2px;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
+    -fx-border-insets: 0px;
 }
 
 .date-picker-error {
@@ -18,6 +19,7 @@
     -fx-border-width: 2px;
     -fx-border-radius: 5;
     -fx-background-radius: 5;
+    -fx-border-insets: 0px;
 }
 
 .button-error {

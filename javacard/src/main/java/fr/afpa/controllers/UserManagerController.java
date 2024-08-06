@@ -1,6 +1,7 @@
 package fr.afpa.controllers;
 
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class UserManagerController {
 
     @FXML
     private void initComboBoxGender() {
-        comboBoxGender.getItems().addAll("Male", "Female", "Non-binary", "Required");
+        comboBoxGender.getItems().addAll("Male", "Female", "Non-binary");
     }
 
     @FXML
@@ -348,20 +349,39 @@ public class UserManagerController {
         if (fName.isEmpty()) {
             textFieldFirstName.getStyleClass().add("text-field-error");
             valid = false;
+        } else if (fName.equals("NEW")) {
+            textFieldFirstName.getStyleClass().add("text-field-error");
+            valid = false;
         }
+
         if (lName.isEmpty()) {
             textFieldLastName.getStyleClass().add("text-field-error");
             valid = false;
+        } else if (lName.equals("Required")) {
+            textFieldLastName.getStyleClass().add("text-field-error");
+            valid = false;
         }
+
         if (gender == null || gender.isEmpty()) {
             comboBoxGender.getStyleClass().add("combo-box-error");
             valid = false;
+        } else if (comboBoxGender.getSelectionModel().isEmpty()) {
+            comboBoxGender.getStyleClass().add("combo-box-error");
+            valid = false;
         }
+
         if (bDay == null) {
             datePickerBirthday.getStyleClass().add("date-picker-error");
             valid = false;
+        } else if (bDay.getYear() == Year.now().getValue()) {
+            datePickerBirthday.getStyleClass().add("date-picker-error");
+            valid = false;
         }
+
         if (tNum.isEmpty()) {
+            textFieldNumber.getStyleClass().add("text-field-error");
+            valid = false;
+        } else if (!Pattern.matches("^0\\d{9}$", tNum)) {
             textFieldNumber.getStyleClass().add("text-field-error");
             valid = false;
         }
@@ -369,21 +389,18 @@ public class UserManagerController {
         if (mail.isEmpty()) {
             textFieldMail.getStyleClass().add("text-field-error");
             valid = false;
-            // } else if
-            // (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail))
-            // {
-            // textFieldLinkedin.getStyleClass().add("text-field-error");
-            // valid = false;
+        } else if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", mail)) {
+            textFieldMail.getStyleClass().add("text-field-error");
+            valid = false;
         }
 
         if (linkd.isEmpty()) {
             textFieldLinkedin.getStyleClass().add("text-field-error");
             valid = false;
-            // } else if
-            // (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd))
-            // {
-            // textFieldLinkedin.getStyleClass().add("text-field-error");
-            // valid = false;
+        } else if (!Pattern.matches(
+                "^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$", linkd)) {
+            textFieldLinkedin.getStyleClass().add("text-field-error");
+            valid = false;
         }
 
         if (valid) {
@@ -440,9 +457,6 @@ public class UserManagerController {
 
         // Clear selection -> not to have many selected items
         tableView4columns.getSelectionModel().clearSelection();
-
-        // Select new Contact
-        // tableView4columns.getSelectionModel().select(newContact);
 
         // Force the TableView to update the selection
         Platform.runLater(() -> {
