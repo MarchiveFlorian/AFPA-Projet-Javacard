@@ -596,6 +596,9 @@ public class UserManagerController {
                         
                         // If QR code generation is successful, add success style to export button
                         exportButton.getStyleClass().add("button-success");
+
+                        //Display QRCode
+                        DisplayQRCode.showImage("/QRCode.png");
                         
                     } catch (WriterException | IOException ex) {
                         // If there is an exception, print the error message and add error style to export button
