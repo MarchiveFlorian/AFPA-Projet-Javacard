@@ -12,6 +12,7 @@ import fr.afpa.models.Contact;
 import java.io.IOException;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -80,7 +81,7 @@ public class UserManagerController {
 
     @FXML
     private void initComboBoxGender() {
-        comboBoxGender.getItems().addAll("Male", "Female", "Non-binary");
+        comboBoxGender.getItems().addAll("Male", "Female", "Non-binary", "Required");
     }
 
     @FXML
@@ -116,10 +117,13 @@ public class UserManagerController {
     private ObservableList<Contact> contacts = FXCollections.observableArrayList();
 
     @FXML
-    private FilteredList<Contact> filteredList; //
+    private FilteredList<Contact> filteredList;
 
     @FXML
     private HBox hBoxForm;
+
+    // DateTimeFormatter LocalDate -> String
+    private final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @FXML
     public void initialize() {
@@ -129,7 +133,7 @@ public class UserManagerController {
         initComboBoxGender();
         initComboBoxSelectFormat();
 
-        tableView4columns.setItems(contacts); // TO DO initialize
+        // tableView4columns.setItems(contacts); //done later
 
         // ChangeListener listening to selection
         tableView4columns.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -138,17 +142,17 @@ public class UserManagerController {
         });
 
         // contacts.addAll(
-                // new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-                //         "", "chloe.boivin@outlook.com",
-                //         "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                // new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-                //         "0613206966",
-                //         "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-                //         "https://github.com/MarchiveFlorian"));
+        // new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo",
+        // "Bordeaux", "0604138029",
+        // "", "chloe.boivin@outlook.com",
+        // "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+        // new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28),
+        // "marchive", "Bordeaux",
+        // "0613206966",
+        // "", "marchiveflorian@gmail.com",
+        // "https://www.linkedin.com/in/florianmarchive/",
+        // "https://github.com/MarchiveFlorian"));
 
-        // ***
-        // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
-        // ***
         // Load contacts from binary file
         try {
             ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
@@ -158,18 +162,37 @@ public class UserManagerController {
             System.out.println("Failed to load contacts from binary file: " + e.getMessage());
         }
 
+        // TableView link
         columnFirstName.setCellValueFactory(cellData -> cellData.getValue().firstNameProperty());
-        columnLastName.setCellValueFactory(cellData -> cellData.getValue().lastNameProperty());
-        columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
-        columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
+        columnLastName.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getLastName().equals("Required")) {
+                return new SimpleStringProperty("-");
+            } else {
+                return cellData.getValue().lastNameProperty();
+            }
+        });
+        columnNumber.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getPersonalPhoneNumber().equals("Required")) {
+                return new SimpleStringProperty("-");
+            } else {
+                return cellData.getValue().personalPhoneNumberProperty();
+            }
+        });
+        columnMail.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getEmailAddress().equals("Required")) {
+                return new SimpleStringProperty("-");
+            } else {
+                return cellData.getValue().emailAddressProperty();
+            }
+        });
 
-         // Add a listener to handle window close event
+        // Add a listener to handle window close event
         Platform.runLater(() -> {
             Stage stage = (Stage) tableView4columns.getScene().getWindow();
             stage.setOnCloseRequest(event -> saveContactsOnClose());
         });
 
-        //COMBOBOX SELECT FORMAT MOUSE EVENT
+        // COMBOBOX SELECT FORMAT MOUSE EVENT
         comboBoxSelectFormat.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             exportButton.getStyleClass().remove("button-error");
             exportButton.getStyleClass().remove("button-success");
@@ -178,17 +201,17 @@ public class UserManagerController {
         // RESEARCH FUNCTION
 
         // Creation of the Filtered list
-        filteredList = new FilteredList<>(contacts, p -> true);
-        SortedList<Contact> sortedData = new SortedList<>(filteredList);
-        sortedData.comparatorProperty().bind(tableView4columns.comparatorProperty());
-        tableView4columns.setItems(sortedData);
-
-        // DateTimeFormatter LocalDate -> String
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        filteredList = new FilteredList<>(contacts, c -> true);
+        tableView4columns.setItems(filteredList);
 
         // Listener on the TextField researchField
         researchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredList.setPredicate(createPredicate(newValue, dateFormatter));
+            String searchText = researchField.getText();
+            if (searchText.isEmpty()) {
+                filteredList.setPredicate(c -> true);
+            } else {
+                filteredList.setPredicate(createPredicate());
+            }
         });
 
         // After setting up the TableView and contacts, select the first contact
@@ -198,6 +221,36 @@ public class UserManagerController {
             researchField.getParent().requestFocus(); // Moves focus away from the search field
         });
 
+    }
+
+    private Predicate<Contact> createPredicate() {
+        return contact -> {
+            String searchText = researchField.getText();
+            String lowerCaseFilter = searchText.toLowerCase();
+
+            return contact.getFirstName() != null && contact.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getFirstName() != null && contact.getLastName().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getGender() != null && contact.getGender().toLowerCase().equals(lowerCaseFilter) ||
+                    contact.getBirthDate() != null
+                            && contact.getBirthDate().format(DATE_FORMATTER).contains(lowerCaseFilter)
+                    ||
+                    contact.getNickname() != null && contact.getNickname().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getAddress() != null && contact.getAddress().toLowerCase().contains(lowerCaseFilter) ||
+                    contact.getPersonalPhoneNumber() != null
+                            && contact.getPersonalPhoneNumber().toLowerCase().contains(lowerCaseFilter)
+                    ||
+                    contact.getProfessionalPhoneNumber() != null
+                            && contact.getProfessionalPhoneNumber().toLowerCase().contains(lowerCaseFilter)
+                    ||
+                    contact.getEmailAddress() != null
+                            && contact.getEmailAddress().toLowerCase().contains(lowerCaseFilter)
+                    ||
+                    contact.getLinkedinLink() != null
+                            && contact.getLinkedinLink().toLowerCase().contains(lowerCaseFilter)
+                    ||
+                    contact.getGithubGitlabLink() != null
+                            && contact.getGithubGitlabLink().toLowerCase().contains(lowerCaseFilter);
+        };
     }
 
     /**
@@ -212,27 +265,6 @@ public class UserManagerController {
         } catch (IOException e) {
             System.out.println("Failed to save contacts on close: " + e.getMessage());
         }
-    }
-
-    @FXML
-    private Predicate<Contact> createPredicate(String searchText, DateTimeFormatter dateFormatter) {
-        return contact -> {
-            if (searchText == null || searchText.isEmpty()) {
-                return true; // Show all contacts
-            }
-            String lowerCaseFilter = searchText.toLowerCase();
-            return contact.getFirstName().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getLastName().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getGender().toLowerCase().equals(lowerCaseFilter) ||
-                    contact.getBirthDate().format(dateFormatter).contains(lowerCaseFilter) ||
-                    contact.getNickname().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getAddress().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getPersonalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getProfessionalPhoneNumber().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getEmailAddress().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getLinkedinLink().toLowerCase().contains(lowerCaseFilter) ||
-                    contact.getGithubGitlabLink().toLowerCase().contains(lowerCaseFilter);
-        };
     }
 
     /**
@@ -337,17 +369,21 @@ public class UserManagerController {
         if (mail.isEmpty()) {
             textFieldMail.getStyleClass().add("text-field-error");
             valid = false;
-        // } else if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail)) {
-        //     textFieldLinkedin.getStyleClass().add("text-field-error");
-        //     valid = false;
+            // } else if
+            // (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail))
+            // {
+            // textFieldLinkedin.getStyleClass().add("text-field-error");
+            // valid = false;
         }
 
         if (linkd.isEmpty()) {
             textFieldLinkedin.getStyleClass().add("text-field-error");
             valid = false;
-        // } else if (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd)) {
-        //     textFieldLinkedin.getStyleClass().add("text-field-error");
-        //     valid = false;
+            // } else if
+            // (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd))
+            // {
+            // textFieldLinkedin.getStyleClass().add("text-field-error");
+            // valid = false;
         }
 
         if (valid) {
@@ -393,7 +429,8 @@ public class UserManagerController {
         comboBoxGender.setPromptText("Required - Select gender");
         hBoxForm.setVisible(true);
 
-        Contact newContact = new Contact("NEW", "-", null, null, null, null, "-", null, "-", "", null);
+        Contact newContact = new Contact("NEW", "Required", "Required", LocalDate.now(), "-", "-", "Required", "-",
+                "Required", "Required", "-");
 
         // Add new contact to the original (non-filtered) list
         contacts.add(newContact);
@@ -405,7 +442,7 @@ public class UserManagerController {
         tableView4columns.getSelectionModel().clearSelection();
 
         // Select new Contact
-        tableView4columns.getSelectionModel().select(newContact);
+        // tableView4columns.getSelectionModel().select(newContact);
 
         // Force the TableView to update the selection
         Platform.runLater(() -> {
@@ -465,7 +502,7 @@ public class UserManagerController {
                 case "vCard":
                     // TO DO Link with VCard Logic
                     try {
-                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();    
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
 
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
@@ -481,21 +518,21 @@ public class UserManagerController {
                     break;
 
                 case "JSON":
-                try {
-                    ContactJsonSerializer jsonSerializer = new ContactJsonSerializer();    
+                    try {
+                        ContactJsonSerializer jsonSerializer = new ContactJsonSerializer();
 
-                    // Save contacts using the created instances
-                    jsonSerializer.saveList("contacts.json", contactsList);
-                    System.out.println("Contacts exported successfully in Json format.");
+                        // Save contacts using the created instances
+                        jsonSerializer.saveList("contacts.json", contactsList);
+                        System.out.println("Contacts exported successfully in Json format.");
 
-                } catch (IOException ex) {
-                    System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
-                    exportButton.getStyleClass().add("button-error");
-                }
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
+                        exportButton.getStyleClass().add("button-error");
+                    }
                     System.out.println("Exporting as JSON");
                     exportButton.getStyleClass().add("button-success");
                     break;
-                    
+
                 case "CSV":
                     // TO DO Link with CSV Logic
                     System.out.println("Exporting as CSV");
