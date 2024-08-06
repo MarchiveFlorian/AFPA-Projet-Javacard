@@ -3,11 +3,18 @@ package fr.afpa.controllers;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+
 import fr.afpa.models.Contact;
+import fr.afpa.controllers.ContactQRcodeSerializer;
 
 import java.io.IOException;
 
@@ -137,13 +144,16 @@ public class UserManagerController {
         });
 
         // contacts.addAll(
-                // new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo", "Bordeaux", "0604138029",
-                //         "", "chloe.boivin@outlook.com",
-                //         "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
-                // new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28), "marchive", "Bordeaux",
-                //         "0613206966",
-                //         "", "marchiveflorian@gmail.com", "https://www.linkedin.com/in/florianmarchive/",
-                //         "https://github.com/MarchiveFlorian"));
+        // new Contact("Chloé", "Boivin", "Female", LocalDate.of(1995, 07, 19), "bulo",
+        // "Bordeaux", "0604138029",
+        // "", "chloe.boivin@outlook.com",
+        // "https://www.linkedin.com/in/chloe-boivin/", "https://github.com/bu-lo"),
+        // new Contact("Florian", "Marchive", "Male", LocalDate.of(1995, 03, 28),
+        // "marchive", "Bordeaux",
+        // "0613206966",
+        // "", "marchiveflorian@gmail.com",
+        // "https://www.linkedin.com/in/florianmarchive/",
+        // "https://github.com/MarchiveFlorian"));
 
         // ***
         // *** TO DO: INITIALIZE WITH CONTACTS ALREADY IN BINARY ***
@@ -162,7 +172,7 @@ public class UserManagerController {
         columnNumber.setCellValueFactory(cellData -> cellData.getValue().personalPhoneNumberProperty());
         columnMail.setCellValueFactory(cellData -> cellData.getValue().emailAddressProperty());
 
-         // Add a listener to handle window close event
+        // Add a listener to handle window close event
         Platform.runLater(() -> {
             Stage stage = (Stage) tableView4columns.getScene().getWindow();
             stage.setOnCloseRequest(event -> saveContactsOnClose());
@@ -329,17 +339,21 @@ public class UserManagerController {
         if (mail.isEmpty()) {
             textFieldMail.getStyleClass().add("text-field-error");
             valid = false;
-        // } else if (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail)) {
-        //     textFieldLinkedin.getStyleClass().add("text-field-error");
-        //     valid = false;
+            // } else if
+            // (!Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",mail))
+            // {
+            // textFieldLinkedin.getStyleClass().add("text-field-error");
+            // valid = false;
         }
 
         if (linkd.isEmpty()) {
             textFieldLinkedin.getStyleClass().add("text-field-error");
             valid = false;
-        // } else if (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd)) {
-        //     textFieldLinkedin.getStyleClass().add("text-field-error");
-        //     valid = false;
+            // } else if
+            // (!Pattern.matches("^(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/(in|company|school)\\/[a-zA-Z0-9_-]+\\/?$",linkd))
+            // {
+            // textFieldLinkedin.getStyleClass().add("text-field-error");
+            // valid = false;
         }
 
         if (valid) {
@@ -456,7 +470,7 @@ public class UserManagerController {
                 case "vCard":
                     // TO DO Link with VCard Logic
                     try {
-                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();    
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
 
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contacts.vcf", contactsList);
@@ -470,25 +484,61 @@ public class UserManagerController {
                     break;
 
                 case "JSON":
-                try {
-                    ContactJsonSerializer jsonSerializer = new ContactJsonSerializer();    
+                    try {
+                        ContactJsonSerializer jsonSerializer = new ContactJsonSerializer();
 
-                    // Save contacts using the created instances
-                    jsonSerializer.saveList("contacts.json", contactsList);
-                    System.out.println("Contacts exported successfully in Json format.");
+                        // Save contacts using the created instances
+                        jsonSerializer.saveList("contacts.json", contactsList);
+                        System.out.println("Contacts exported successfully in Json format.");
 
-                } catch (IOException ex) {
-                    System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
-                }
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in Json format: " + ex.getMessage());
+                    }
                     System.out.println("Exporting as JSON");
                     break;
-                    
+
                 case "CSV":
-                    // TO DO Link with CSV Logic
-                    System.out.println("Exporting as CSV");
+                    try {
+                        ContactCsvSerializer csvSerializer = new ContactCsvSerializer();
+                        csvSerializer.saveList("contacts.csv", contactsList);
+                        System.out.println("Contacts exported successfully in CSV format.");
+                    } catch (IOException ex) {
+                        System.out.println("Failed to export contacts in CSV format: " + ex.getMessage());
+                    }
                     break;
+
                 case "QRCode":
-                    // TO DO Link with QRCode Logic
+                    try {
+
+                        ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
+
+                        // Save contacts using the created instances
+                        vCardSerializer.saveList("contacts.vcf", contactsList);
+
+                        // Le chemin vers le fichier vCard
+                        String vcardFilePath = "contacts.vcf";
+
+                        // Lire le contenu du fichier vCard
+                        String vcardString = ContactQRcodeSerializer.readFileAsString(vcardFilePath);
+
+                        // Le chemin où l'image QR code sera enregistrée
+                        String qrCodeImagePath = "QRcode.png";
+
+                        // Encodage charset
+                        String charset = "UTF-8";
+
+                        // Création d'une map pour définir le niveau de correction d'erreur du QR code
+                        Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<>();
+                        hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
+
+                        // Appel de la méthode createQR pour créer et sauvegarder le QR code en tant que
+                        // fichier PNG
+                        ContactQRcodeSerializer.createQR(vcardString, qrCodeImagePath, charset, hashMap, 200, 200);
+                        System.out.println("QR Code Generated!!!");
+
+                    } catch (WriterException | IOException ex) {
+                        ex.printStackTrace();
+                    }
                     System.out.println("Exporting as QRCode");
                     break;
             }
