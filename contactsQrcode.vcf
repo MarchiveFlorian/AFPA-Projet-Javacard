@@ -1,13 +1,13 @@
 BEGIN:VCARD
 VERSION:4.0
 PRODID:ez-vcard 0.10.6
-N:Boivin;Chloé;;;
-TEL:0604138029
+N:Marchive;Florian;;;
+TEL:0613206966
 ADR:;;Bordeaux;;;;
-EMAIL:chloe.boivin@outlook.com
-GENDER:Female
-BDAY:19950719
-NICKNAME:bulo
-URL:https://www.linkedin.com/in/chloe-boivin/
-URL:https://github.com/bu-lo
+EMAIL:marchiveflorian@gmail.com
+GENDER:Male
+BDAY:19950328
+NICKNAME:marchive
+URL:https://www.linkedin.com/in/florianmarchive/
+URL:https://github.com/MarchiveFlorian
 END:VCARD
