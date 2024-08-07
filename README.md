@@ -5,3 +5,5 @@
 <img align="center" src="./previews/preview_error_javaCard.PNG" width="600" height="400" />
 
 <img align="center" src="./previews/preview_selectAll_javaCard.PNG" width="600" height="400" />
+
+<img align="center" src="./previews/preview_QRCode_javaCard.PNG" width="600" height="400" />
