@@ -8,6 +8,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * JavaFX App
@@ -22,6 +24,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        // TODO : créer sous-dossier ".javacard" dans le dossier utilisateur
+        // https://stackoverflow.com/questions/28947250/create-a-directory-if-it-does-not-exist-and-then-create-the-files-in-that-direct
+        //Files.createDirectories(Paths.get("C:\\Users\\.javacard"));
 
          // *** TITLE IN STAGE ***
         stage.setTitle(" JAVA CARD MANAGER");

@@ -1,5 +1,8 @@
 package fr.afpa.controllers;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +14,15 @@ public class DisplayQRCode {
 
     public static void showImage(String imagePath) {
         // Chargez l'image depuis le classpath
-        Image image = new Image(DisplayQRCode.class.getResourceAsStream(imagePath));
+        Image image = null;
+        try {
+            image = new Image(new FileInputStream(imagePath));
+        } catch (FileNotFoundException e) {
+            System.err.println("Erreur de chargement de l'image : " + imagePath);
+            e.printStackTrace();
+            return;
+        }
+
         if (image.isError()) {
             System.err.println("Erreur de chargement de l'image : " + imagePath);
             return;

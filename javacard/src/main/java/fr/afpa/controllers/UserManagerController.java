@@ -526,6 +526,12 @@ public class UserManagerController {
                         ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
 
                         // Save contacts using the created instances
+
+                        // Chemin = dossier utilisateur + ".javacard"
+                        // Pour retrouver le chemin aboslu vers le dosssier utilsiateur :
+                        // System.getProperty("user.home");
+
+
                         vCardSerializer.saveList("contacts.vcf", contactsList);
                         System.out.println("Contacts exported successfully in vCard format.");
 
@@ -598,7 +604,7 @@ public class UserManagerController {
                         exportButton.getStyleClass().add("button-success");
 
                         //Display QRCode
-                        DisplayQRCode.showImage("/QRCode.png");
+                        DisplayQRCode.showImage("QRCode.png");
                         
                     } catch (WriterException | IOException ex) {
                         // If there is an exception, print the error message and add error style to export button
