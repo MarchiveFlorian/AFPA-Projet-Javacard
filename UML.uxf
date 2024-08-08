@@ -1,5 +1,5 @@
-<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><help_text>String</help_text><element><id>UMLClass</id><coordinates><x>322</x><y>86</y><w>189</w><h>245</h></coordinates><panel_attributes>&lt;&lt;Contact&gt;&gt;
-Package::models
+<diagram program="umletino" version="15.1"><zoom_level>7</zoom_level><help_text>String</help_text><element><id>UMLClass</id><coordinates><x>322</x><y>86</y><w>189</w><h>245</h></coordinates><panel_attributes>Package::models
+Contact
 --
 -firstName: StringProperty
 -lastName: StringProperty
@@ -41,16 +41,17 @@ Package::controllers
 - contactToJson(contact : Contact) : JsonArray
 
 
-bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>233</y><w>189</w><h>70</h></coordinates><panel_attributes>&lt;&lt;ContactVcardSerializer&gt;&gt;
-Package::controllers
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>233</y><w>189</w><h>70</h></coordinates><panel_attributes>Package::controllers
+ContactVcardSerializer
 --
 
 --
 
 - contactToVcard(contact : Contacts) : VCard
 
-bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>499</y><w>189</w><h>70</h></coordinates><panel_attributes>&lt;&lt;ContactBinarySerializer&gt;&gt;
-Package::controllers
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>499</y><w>189</w><h>77</h></coordinates><panel_attributes>Package::controllers
+ContactBinarySerializer
+
 --
 
 --
@@ -58,17 +59,17 @@ Package::controllers
 + clearFile(fileName : String) : void
 
 bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>282</y><w>133</w><h>154</h></coordinates><panel_attributes>lt=&lt;..
-&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;170;200</additional_attributes></element><element><id>Relation</id><coordinates><x>707</x><y>191</y><w>49</w><h>56</h></coordinates><panel_attributes>lt=&lt;..
-&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>310</y><w>133</w><h>245</h></coordinates><panel_attributes>lt=&lt;..
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;170;200</additional_attributes></element><element><id>Relation</id><coordinates><x>707</x><y>198</y><w>49</w><h>49</h></coordinates><panel_attributes>lt=&lt;..
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>310</y><w>133</w><h>245</h></coordinates><panel_attributes>lt=&lt;..
 &lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;170;330</additional_attributes></element><element><id>UMLNote</id><coordinates><x>546</x><y>2</y><w>140</w><h>49</h></coordinates><panel_attributes>Classes that enable saving 
 objects of the "Contact" class in 
 the various expected formats.
 bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>44</y><w>21</w><h>42</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;10;40</additional_attributes></element><element><id>Relation</id><coordinates><x>287</x><y>303</y><w>49</w><h>21</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;10;50;10</additional_attributes></element><element><id>UMLNote</id><coordinates><x>644</x><y>597</y><w>119</w><h>49</h></coordinates><panel_attributes>"ContactBinarySerializer"
  is the only the only one that
 implements "Deserialize&lt;T&gt;"
-bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>735</x><y>562</y><w>21</w><h>49</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>980</x><y>212</y><w>252</w><h>84</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
-Serializer&lt;T&gt;
-Package::serializers
+bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>735</x><y>569</y><w>21</w><h>42</h></coordinates><panel_attributes>lt=.</panel_attributes><additional_attributes>10;40;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>980</x><y>212</y><w>252</w><h>84</h></coordinates><panel_attributes>Package::serializers
+&lt;&lt;interface&gt;&gt;
+/Serializer&lt;T&gt;/
 --
 
 --
@@ -77,9 +78,9 @@ Package::serializers
 
 
 bg=green
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>987</x><y>492</y><w>161</w><h>84</h></coordinates><panel_attributes>&lt;&lt;interface&gt;&gt;
-Deserializer&lt;T&gt;
-Package::serializers
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>987</x><y>492</y><w>161</w><h>84</h></coordinates><panel_attributes>Package::serializers
+&lt;&lt;interface&gt;&gt;
+/Deserializer&lt;T&gt;/
 --
 
 --
@@ -88,12 +89,12 @@ Package::serializers
 
 
 bg=green
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>282</y><w>189</w><h>147</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
-&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>250;10;10;190</additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>212</y><w>189</w><h>49</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>289</y><w>189</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>250;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>212</y><w>189</w><h>49</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
 &lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>250;10;10;50</additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>289</y><w>336</w><h>231</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
 &lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>460;10;10;310</additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>513</y><w>196</w><h>28</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
-&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>260;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>322</x><y>387</y><w>189</w><h>469</h></coordinates><panel_attributes>&lt;&lt;UserManagerController&gt;&gt;
-Package::controllers
+&lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>260;20;10;20</additional_attributes></element><element><id>UMLClass</id><coordinates><x>322</x><y>387</y><w>189</w><h>469</h></coordinates><panel_attributes>Package::controllers
+UserManagerController
 --
 - deleteButton : Button
 - newButton : Button
@@ -138,8 +139,9 @@ Package::controllers
 + initComboBoxGender(): void           
 + initComboBoxSelectFormat(): void 
 bg=orange</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>399</x><y>324</y><w>49</w><h>77</h></coordinates><panel_attributes>lt=&lt;..
-&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>324</y><w>189</w><h>56</h></coordinates><panel_attributes>&lt;&lt;ContactCsvSerializer&gt;&gt;
-Package::controllers
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;10;90</additional_attributes></element><element><id>UMLClass</id><coordinates><x>623</x><y>324</y><w>189</w><h>56</h></coordinates><panel_attributes>Package::controllers
+ContactCsvSerializer
+
 --
 
 --
@@ -147,8 +149,9 @@ bg=orange
 
 </panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>805</x><y>240</y><w>189</w><h>126</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;.
 &lt;&lt;implements&gt;&gt;</panel_attributes><additional_attributes>250;10;10;160</additional_attributes></element><element><id>Relation</id><coordinates><x>504</x><y>261</y><w>133</w><h>91</h></coordinates><panel_attributes>lt=&lt;..
-&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;170;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>616</x><y>72</y><w>210</w><h>126</h></coordinates><panel_attributes>&lt;&lt;ContactQRcodeSerializer&gt;&gt;
-Package::controllers
+&lt;&lt;uses&gt;&gt;</panel_attributes><additional_attributes>10;10;170;110</additional_attributes></element><element><id>UMLClass</id><coordinates><x>616</x><y>72</y><w>210</w><h>133</h></coordinates><panel_attributes>Package::controllers
+ContactQRcodeSerializer
+
 --
 
 --
