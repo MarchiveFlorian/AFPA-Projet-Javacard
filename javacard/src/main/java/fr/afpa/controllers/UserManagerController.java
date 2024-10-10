@@ -15,6 +15,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 import fr.afpa.models.Contact;
+import fr.afpa.tools.ConnectionPostgreSQL;
 import fr.afpa.controllers.ContactQRcodeSerializer;
 
 import java.io.IOException;
@@ -162,12 +163,23 @@ public class UserManagerController {
         // "https://github.com/MarchiveFlorian"));
 
         // Load contacts from binary file
+        // try {
+        // ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+        // ArrayList<Contact> loadedContacts =
+        // binarySerializer.loadList("contacts.bin");
+        // contacts.addAll(loadedContacts);
+        // } catch (IOException | ClassNotFoundException e) {
+        // System.out.println("Failed to load contacts from binary file: " +
+        // e.getMessage());
+        // }
+
+        // Load contacts from database
         try {
-            ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-            ArrayList<Contact> loadedContacts = binarySerializer.loadList("contacts.bin");
+            ContactDAO dao = new ContactDAO();
+            ArrayList<Contact> loadedContacts = dao.getAll();
             contacts.addAll(loadedContacts);
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Failed to load contacts from binary file: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Failed to load contacts from database: " + e.getMessage());
         }
 
         // TableView link
@@ -194,10 +206,22 @@ public class UserManagerController {
             }
         });
 
-        // Add a listener to handle window close event
+        // Ajoute un écouteur pour gérer l'événement de fermeture de la fenêtre
         Platform.runLater(() -> {
             Stage stage = (Stage) tableView4columns.getScene().getWindow();
-            stage.setOnCloseRequest(event -> saveContactsOnClose());
+            stage.setOnCloseRequest(event -> {
+                try {
+                    // Tente de sauvegarder les contacts
+                    saveContactsOnClose();
+                } catch (Exception e) {
+                    System.out.println("Échec de la sauvegarde des contacts : " + e.getMessage());
+                    event.consume(); // Empêche la fermeture si la sauvegarde échoue
+                    return; // Quitte la méthode si la sauvegarde échoue
+                }
+
+                // Ferme la connexion à la base de données après la sauvegarde
+                ConnectionPostgreSQL.close();
+            });
         });
 
         // COMBOBOX SELECT FORMAT MOUSE EVENT
@@ -264,16 +288,40 @@ public class UserManagerController {
     /**
      * Saves the contacts to a binary file when the application is closed.
      */
+    // private void saveContactsOnClose() {
+    // try {
+    // ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
+    // binarySerializer.clearFile("contacts.bin");
+    // binarySerializer.saveList("contacts.bin", new ArrayList<>(contacts));
+    // System.out.println("Contacts saved successfully on close.");
+    // } catch (IOException e) {
+    // System.out.println("Failed to save contacts on close: " + e.getMessage());
+    // }
+    // }
+
+    // Save the contacts to database when application is closed.
     private void saveContactsOnClose() {
         try {
-            ContactBinarySerializer binarySerializer = new ContactBinarySerializer();
-            binarySerializer.clearFile("contacts.bin");
-            binarySerializer.saveList("contacts.bin", new ArrayList<>(contacts));
-            System.out.println("Contacts saved successfully on close.");
-        } catch (IOException e) {
+            // Sauvegarde des contacts en base de données
+            ContactDAO dao = new ContactDAO();
+    
+            // // Clear de la table pour éviter les doublons
+            // dao.clearTable();
+    
+            // Appel de la méthode insert pour sauvegarder les contacts
+            boolean success = dao.insert(new ArrayList<>(contacts));
+    
+            if (success) {
+                System.out.println("Contacts saved successfully on close.");
+            } else {
+                System.out.println("No contacts were saved on close.");
+            }
+        } catch (Exception e) {
             System.out.println("Failed to save contacts on close: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+    
 
     /**
      * RESET THE FORM + INIT VERSION
@@ -531,7 +579,6 @@ public class UserManagerController {
                         // Pour retrouver le chemin aboslu vers le dosssier utilsiateur :
                         // System.getProperty("user.home");
 
-
                         vCardSerializer.saveList("contacts.vcf", contactsList);
                         System.out.println("Contacts exported successfully in vCard format.");
 
@@ -573,41 +620,42 @@ public class UserManagerController {
                     exportButton.getStyleClass().add("button-success");
                     break;
 
-                    case "QRCode (1 contact)":
+                case "QRCode (1 contact)":
                     try {
                         ContactVCardSerializer vCardSerializer = new ContactVCardSerializer();
-                        
+
                         // Save contacts using the created instances
                         vCardSerializer.saveList("contactsQRcode.vcf", contactsList);
-                        
+
                         // The path to the vCard file
                         String vcardFilePath = "contactsQRcode.vcf";
-                        
+
                         // Read the contents of the vCard file
                         String vcardString = ContactQRcodeSerializer.readFileAsString(vcardFilePath);
-                        
+
                         // The path where the QR code image will be saved
                         String qrCodeImagePath = "QRcode.png";
-                        
+
                         // Encoding charset
                         String charset = "UTF-8";
-                        
+
                         // Creating a map to define the error correction level of the QR code
                         Map<EncodeHintType, ErrorCorrectionLevel> hashMap = new HashMap<>();
                         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
-                        
+
                         // Call the createQR method to create and save the QR code as a PNG file
                         ContactQRcodeSerializer.createQR(vcardString, qrCodeImagePath, charset, hashMap, 200, 200);
                         System.out.println("QR Code Generated!!!");
-                        
+
                         // If QR code generation is successful, add success style to export button
                         exportButton.getStyleClass().add("button-success");
 
-                        //Display QRCode
+                        // Display QRCode
                         DisplayQRCode.showImage("QRCode.png");
-                        
+
                     } catch (WriterException | IOException ex) {
-                        // If there is an exception, print the error message and add error style to export button
+                        // If there is an exception, print the error message and add error style to
+                        // export button
                         System.out.println("Failed to export contacts in QRCode format: " + ex.getMessage());
                         exportButton.getStyleClass().add("button-error");
                     }
